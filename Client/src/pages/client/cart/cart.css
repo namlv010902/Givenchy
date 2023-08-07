@@ -1,0 +1,61 @@
+#cart {
+  width: 60%;
+  border-radius: 10px 10px 0 0;
+
+
+}
+
+#show-cart {
+  display: flex;
+  justify-content: space-between;
+}
+
+#cart th {
+  padding: 10px;
+  background-color: #015E6B;
+  color: #fff;
+
+
+}
+
+.OrderForm {
+  width: 40%;
+  margin-left: 40px;
+}
+
+#cart th,
+td {
+  border-bottom: 2px solid #ccc;
+  text-align: center;
+  height: max-content;
+}
+
+td img {
+  width: 100px;
+  margin: 10px 0;
+}
+
+.cart-err {
+  text-align: center;
+}
+
+.cart-err img {
+  width: 200px;
+}
+
+.btn-removeCart {
+  font-size: 18px;
+  border-radius: 5px;
+  background-color: #357ebd;
+  border: none;
+  padding: 10px;
+  color: #fff;
+}
+
+.btn-removeCart:hover {
+  background-color: #ED2B2A;
+  transition: 0.3s ease-in-out;
+  border-radius: 50%;
+  cursor: pointer;
+
+}

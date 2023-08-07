@@ -1,0 +1,18 @@
+*{
+  margin:0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.container-f{
+  width: 100%;
+  margin: 0 auto;
+  font-family: 'Poppins', sans-serif;
+  /* background-color: #F3F3F3; */
+}
+.loanding{
+ text-align: center;
+  width: 100%;
+}
+.loanding img{
+  width: 50px;
+}

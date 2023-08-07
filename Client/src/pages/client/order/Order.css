@@ -1,0 +1,13 @@
+.order-main{
+    padding: 20px 100px;
+    min-height: 60vh;
+}
+#table-order{
+    width: 100%;
+}
+.order-main>h1{
+   border-bottom: 2px solid #FF8400;
+   margin-bottom: 20px;
+   padding-bottom: 10px;
+
+}

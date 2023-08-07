@@ -1,0 +1,18 @@
+#sendMail input{
+    border: 1.5px solid #CECFD3;
+    border-radius: 5px;
+    padding: 10px;
+    width: 300px;
+    outline: none;
+}
+#sendMail input:focus{
+    border: 2px solid #2986CC;
+}
+#sendMail button{
+    background-color: #2986CC;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

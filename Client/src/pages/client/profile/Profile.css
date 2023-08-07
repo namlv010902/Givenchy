@@ -1,0 +1,22 @@
+.profile-main{
+    min-height: 80vh;
+    padding: 20px 100px;
+}
+.avatar{
+    width: 200px;
+    height: 200px;
+}
+.upload-avatar{
+  padding: 5px 10px;
+  background-color: #2986CC;
+  color:#fff;
+  margin-left: 60px;
+  margin-top:3px;
+  display: inline-block;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.upload-avatar:hover{
+  background-color: #16537E;
+
+}

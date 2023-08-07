@@ -197,7 +197,6 @@ const [idCate, setIdCate] = useState("")
   useEffect(() => {
     getUserOrder(idUser).then(({ data }) => setOrders(data.order))
   }, [])
-  // console.log(orders);
   const onFilterOrder = (status: string, idUser: string) => {
     filterOrder(status, idUser).then(({ data }) => setOrders(data.order))
   }

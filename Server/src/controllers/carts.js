@@ -46,36 +46,33 @@ export const addToCart = async (req, res) => {
     }
 }
 //Update quantity of product in cart
-export const updateCart = async (req, res) => {
+export const updateCartItemQuantity = async (req, res) => {
     try {
-        const { quantity, productId, userId, sizeId } = req.body
-        console.log(quantity, productId, userId);
+        const { quantity, userId } = req.body
+        
         //tìm trong giỏ hàng theo idUser
-
         let cart = await Cart.findOne({ userId: userId })
 
-        console.log("Cart :", cart);
         //tìm idProduct để sánh
-        const productExits =  cart.products.find(item => item.productId == productId && item.colorId == colorId)
-        console.log("exits :", productExits);
-        const product = await Products.findById(productId)
-        const price = product.price
+        const productExits = cart.products.find(item => item._id == req.params.id )
+        console.log("product: ", productExits);
+        
         if (productExits.quantity > quantity) {
             console.log("Giam")
 
             console.log("Cũ:", productExits.quantity + "mới: ", quantity);
-            cart.totalPrice = cart.totalPrice - (price * (productExits.quantity - quantity))
+            cart.totalPrice = cart.totalPrice - (productExits.price * (productExits.quantity - quantity))
         } else {
             console.log("Tăng");
 
-            cart.totalPrice = cart.totalPrice + (price * (quantity - productExits.quantity))
+            cart.totalPrice = cart.totalPrice + (productExits.price  * (quantity - productExits.quantity))
         }
 
         //tính lại tổng tiền xog mới cập nhật lại số lượng
         productExits.quantity = quantity
         cart.save()
         await cart.populate("products.productId")
-
+        await cart.populate("products.sizeId")
         return res.status(201).json({
             message: "Update cart successfully",
             cart
@@ -89,13 +86,13 @@ export const updateCart = async (req, res) => {
 //Xóa 1 sản phẩm (.) giỏ hàng
 export const removeOneProductInCart = async (req, res) => {
     try {
-        const { userId, sizeId,price ,quantity} = req.body
-        console.log("idU:", userId, "idP:", req.params.id);
+        const { userId} = req.body
+       console.log(userId, "&&", req.params.id);
         //tìm trong giỏ hàng theo idUser
         let cart = await Cart.findOne({ userId: userId })
 
         //tìm idProduct để sánh
-        const productExits = cart.products.find(item => item.productId == req.params.id )
+        const productExits = cart.products.find(item => item._id == req.params.id )
         console.log("product: ", productExits);
         
         const productIndex = cart.products.indexOf(productExits)

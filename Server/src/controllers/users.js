@@ -83,7 +83,7 @@ export const sendForgotPasswordEmail = async (req, res) => {
       from: 'namphpmailer@gmail.com',
       to: email,
       subject: 'Yêu cầu đặt lại mật khẩu',
-      html: '<div> <img src="https://bizweb.dktcdn.net/thumb/large/100/482/001/themes/906081/assets/shop_logo_image.png?1687164764867" /> <p style="font-size: 15px; color: #002140; font-weight: 500;">Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu Facebook của bạn. Nhập mã đặt lại mật khẩu sau đây:</p>' +
+      html: '<div> <img src="https://charmee-store-demo.myshopify.com/cdn/shop/files/logo.png?v=1613708277" /> <p style="font-size: 15px; color: #002140; font-weight: 500;">Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu của bạn. Nhập mã đặt lại mật khẩu sau đây:</p>' +
         '<p><strong style="font-size: 18px; color: blue;">' + token + '</strong></p></div>',
     }
     // Gửi email
@@ -107,13 +107,13 @@ export const verifyTokenEmail = async (req, res) => {
       if (err) {
         if (err.name == "JsonWebTokenError") {
           return res.status(401).json({
-            message: "Mã xác minh không hợp lệ!",
+            message: "Invalid verification code!!",
             //Token không hợp lệ
           });
         }
         if (err.name == "TokenExpiredError") {
           return res.status(402).json({
-            message: "Mã xác minh hết hạn",
+            message: "The verification code has expired", // token hết hạn
           });
         }
       }

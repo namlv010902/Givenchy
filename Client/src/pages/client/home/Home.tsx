@@ -1,30 +1,52 @@
 import Carousel from '../../../components/banner/banner'
-import Lazyloaded from '../../../components/lazyloaded/Lazyloaded'
 import './home.css'
 import { Link } from 'react-router-dom'
-import { scrollToTop } from '../../../api/config'
-import {useEffect,useState} from "react"
-import { getProductNew } from '../../../api/products'
-import { IProduct } from '../../../types/products'
+import { scrollToTop } from '../../../service/config.service'
+import { useEffect, useState } from "react"
+import { getProductBest, getProductNew } from '../../../service/products.service'
+import { IProduct } from '../../../interface/products'
 import Products from '../../../components/products/Products'
 
 const Home = () => {
   const [products, setProducts] = useState<IProduct[]>()
+  const [product, setProduct] = useState<IProduct[]>()
   useEffect(() => {
     getProductNew().then(({ data }) => setProducts(data.product.docs)
     )
   }, [])
-
+  useEffect(() => {
+    getProductBest().then(({ data }) => setProduct(data.product.docs)
+    )
+  }, [])
   return (
     <div className='home'>
       <Carousel ></Carousel>
       <div className="home-main">
-        <Lazyloaded></Lazyloaded>
+        <div className="e-con-inner">
+          <div className="inner-text">
+            <h3>Experience Scent Like Never Before</h3>
+            <p>Immerse yourself in the artistry of scent creation as we take you on a visual odyssey through the fascinating history, ingredients, and inspirations behind our exquisite collection of perfumes</p>
+            <button>BUY NOW</button>
+          </div>
+          <div className="inner-image">
+            <div className="img-Above">
+              <img src="https://s.tmimgcdn.com/scr/400x250/340500/perfume-bottle-and-box-mockup_340524-original.jpg" alt="" />
+
+            </div>
+            <div className="img-dioi">
+              <img src="https://demo.codezeel.com/prestashop/PRS15/PRS150354/img/cms/cms-banner-2.jpg" alt="" />
+
+            </div>
+          </div>
+        </div>
         <div className="title" >
-         <div className="title-child"><h1>BEST SELLER</h1></div>
+          <div className="title-child"><h1>BEST SELLER</h1></div>
         </div>
         <div className="products">
-         
+        {product?.map((item: IProduct) => (
+            <Products product={item} ></Products>
+          ))}
+
         </div>
         <div className="banner-child">
           <div className="trendy-text">
@@ -35,22 +57,16 @@ const Home = () => {
             <img src="https://charmee-store-demo.myshopify.com/cdn/shop/files/banner-v6-img1.jpg?v=1613706648" alt="" />
           </div>
         </div>
-       
-        <div className="title" >
-   <div className="title-child"><h1>TRENDING</h1></div> 
-   
-    </div>
-    <div className="products">
-    {products?.map((item:IProduct)=>(
-          <Products product={item} ></Products>
-        ))}
-      
-     
-     
-     
-     
-    </div>
 
+        <div className="title" >
+          <div className="title-child"><h1>TRENDING</h1></div>
+
+        </div>
+        <div className="products">
+          {products?.map((item: IProduct) => (
+            <Products product={item} ></Products>
+          ))}
+        </div>
         <div className='watch&shop'>
           <div style={{ display: "flex" }} >
             <img src="https://permia-store-demo.myshopify.com/cdn/shop/files/instagram1.jpg?v=17232624854781795367" alt="" />
@@ -69,6 +85,7 @@ const Home = () => {
           </div>
 
         </div>
+
       </div>
     </div>
   )

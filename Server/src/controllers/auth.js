@@ -27,7 +27,7 @@ export const register=async(req, res)=>{
         const emailExists =await User.findOne({email: email})
         if(emailExists ){
             return res.status(402).json({
-                message: "Email đã được đăng ký"
+                message: "The Email was registered"
             })
         }
         const hashPassword = await bcrypt.hash(password,10)
@@ -56,17 +56,17 @@ export const login=async(req, res)=>{
         const user =await User.findOne({email: email})
         if(!user ){
             return res.status(402).json({
-                message: "Tài khoản không tồn tại"
+                message: "The account does not exist"
             })
         }
         const checkPassword = await bcrypt.compare(password,user.password);
         if(!checkPassword){
             return res.status(402).json({
-                message: "Sai mật khẩu"
+                message: "Wrong password"
             })
         }
 
-       const accessToken = await jwt.sign({id:user._id},"namle2002",{expiresIn:"24h"})
+       const accessToken =  jwt.sign({id:user._id},"namle2002",{expiresIn:"24h"})
          user.password = undefined
         return res.status(201).json({
             message: "Login account successfully",

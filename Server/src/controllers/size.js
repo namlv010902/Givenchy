@@ -1,3 +1,4 @@
+import Products from "../models/products";
 import Size from "../models/size";
 
 export const createSize = async (req, res) => {
@@ -29,4 +30,25 @@ export const createSize = async (req, res) => {
       })
     }
   }
+  export const productsBySize = async (req, res) => {
+    const { _page = 1, _limit = 12 } = req.query
+    const options = {
+      page: _page,
+      limit: _limit,
+    }
+    try {
+      console.log(req.params.id);
+     
+      const products = await Products.paginate({ "sizes.sizeId": req.params.id }, options)
+      return res.status(201).json({
+        message: "Successfully retrieve products by size",
+        products
+      });
+    } catch (error) {
+      return res.status(400).json({
+        message: error.message
+      });
+    }
+  }
+  
   

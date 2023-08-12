@@ -1,193 +1,191 @@
 import { Card, Avatar, Row, Col } from 'antd';
 import "./Profile.css"
-import {useState, useEffect} from "react"
-import { Button, Checkbox, Form, Input } from 'antd';
+import { useState, useEffect } from "react"
+import { Button, Form, Input } from 'antd';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
+import type { RcFile, UploadFile } from 'antd/es/upload/interface';
 import axios from 'axios';
+import { useStoreUser } from '../../../store/hooks';
+import { getUser, updateProfile } from '../../../service/auth.service';
+import { useNavigate } from 'react-router-dom';
 
-
-interface IProps{
-  handleUpdateProfile(data:any,callback:()=>void):void;
-  user:any
-}
-const Profile = (props:IProps) => {
+const Profile = () => {
   const [profile, setProfile] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const { user, dispatchUser } = useStoreUser()
+  
+  const navigate = useNavigate()
+  const userId = JSON.parse(localStorage.getItem('userId')!);
+  // console.log(userId);
+  useEffect(() => {
+    if (!userId) {
+      navigate("/auth/login")
+    }
+  }, [])
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const { data } = await getUser(userId)
+        dispatchUser({
+          type: "GET_PROFILE",
+          payload: data.user
+        })
+      } catch (error) {
+        console.log('Error fetching user:', error);
+      }
+    }
+    fetchUser()
+  }, [])
   const { Meta } = Card;
   // console.log(props.user);
-  const avatar=props?.user?.avatar
+  const avatar = user?.avatar
   const [showAvatar, setShowAvatar] = useState()
-  useEffect(()=>{
+  useEffect(() => {
     setShowAvatar(avatar)
-  },[avatar])
-  const onFinish = async(values: any) => {
+  }, [avatar])
+  const onFinish = async (values: any) => {
     values["avatar"] = showAvatar
- await props.handleUpdateProfile(values,()=>{
-  setProfile(false)
- })
-  
+    values["userId"] = userId
+    console.log(values);
 
-
+    updateProfile(values).then(() => {
+      dispatchUser({
+        type: 'UPDATE_PROFILE',
+        payload: values
+      })
+      setProfile(false)
+      toast.success('Profile updated successfully')
+    })
   };
-  
-  const [fileList, setFileList] = useState<UploadFile[]>([
-    
-  ]);
+  const [fileList] = useState<UploadFile[]>([]);
 
- 
-
-  const onPreview = async (file: UploadFile) => {
-    let src = file.url as string;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj as RcFile);
-        reader.onload = () => resolve(reader.result as string);
-      });
-    }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
-  };
-  const handleUpload = (fileList:any) => {
-   
+  const handleUpload = (fileList: any) => {
+    setLoading(true)
+    console.log(fileList);
     const formData = new FormData();
-    fileList.forEach((file:any) => {
-      formData.append('image', file);
-    });
-  
-    axios.post('http://localhost:8080/api/upload', formData)
+    for (const file of fileList) {
+      formData.append('image', file.originFileObj);
+   }
+    console.log(formData);
+    axios.post('http://localhost:8080/api/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
       .then((response) => {
-        console.log(response.data.data[0].url);
+        setLoading(false)
+        // console.log(response.data.data[0].url);
         setShowAvatar(response.data.data[0].url)
       })
       .catch((error) => {
         console.log(error);
       });
+     
   };
-  
-  
+
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
- 
-  // console.log(showAvatar);
-  
-  const showProfile=(
+   console.log(loading);
+  const showProfile = (
     <Row justify="center">
-    <Col span={8}>
-      <Card>
-        <Meta
-          avatar={
-            <Avatar className='avatar' src={showAvatar} />
-          }
-          title={props?.user?.name}
-          description="Web Developer"
-        />
-        <h3>About Me:</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tincidunt ultrices risus eu gravida.</p>
-        <h3>Contact Information:</h3>
-        <ul>
-          <li>Email: {props?.user?.email}</li>
-          <li>Phone: {props?.user?.phone}</li>
-        </ul>
-        <Button onClick={()=>setProfile(true)}>Edit profile</Button>
-      </Card>
-   
-    </Col>
-    
-  </Row>
+      <Col span={8}>
+        <Card>
+          <Meta
+            avatar={
+              <Avatar className='avatar' src={showAvatar} />
+            }
+            title={user?.name}
+            description="Web Developer"
+          />
+          <h3>About Me:</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tincidunt ultrices risus eu gravida.</p>
+          <h3>Contact Information:</h3>
+          <ul>
+            <li>Email: {user?.email}</li>
+            <li>Phone: {user?.phone}</li>
+          </ul>
+          <Button onClick={() => setProfile(true)}>Edit profile</Button>
+        </Card>
+      </Col>
+    </Row>
   )
-  const editProfile=(
+  const editProfile = (
     <div>
-       <Row justify="center">
-       
-       <Col span={8}>
-         <Card>
-        
-           <Meta
-             avatar={
-               <Avatar className='avatar' src={showAvatar} />
-             }
-             title={props?.user?.name}
-             description="Web Developer"
-           />
+      <Row justify="center">
+        <Col span={8}>
+          <Card>
+            <Meta
+              avatar={
+                <Avatar className='avatar' src={showAvatar} />
+              }
+              title={user?.name}
+              description="Web Developer"
+            />
+             {loading && <img id='loadingAvatar' src="https://img.pikbest.com/png-images/20190918/cartoon-snail-loading-loading-gif-animation_2734139.png!bw700" alt="" />
+        }
             <ImgCrop rotationSlider  >
-  <Upload
-   className='upload-avatar'
-    fileList={fileList}
-    onChange={({ fileList }) => handleUpload(fileList)}
-   
-    onPreview={onPreview}
-  >
-    {fileList.length < 1 && 'Tải ảnh lên'}
-  </Upload>
-</ImgCrop>
-           <h3>About Me:</h3>
-           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tincidunt ultrices risus eu gravida.</p>
-           <h3>Contact Information:</h3>
-           <Form
-    name="basic"
-
-    initialValues={{ remember: true }}
-    onFinish={onFinish}
-    onFinishFailed={onFinishFailed}
-    autoComplete="off"
-  >
-    <Form.Item
-      label="Username"
-      name="name"
-      rules={[{ required: true, message: 'Please input your username!' }]}
-      initialValue={props?.user?.name}
-    >
-      <Input />
-    </Form.Item>
-    <Form.Item
-      label="Email"
-      name="email"
-      rules={[{ required: true, message: 'Please input your email!',type:"email" }]}
-      initialValue={props?.user?.email}
-    >
-      <Input />
-    </Form.Item>
-    <Form.Item
-      label="Phone"
-      name="phone"
-      rules={[{ required: true, message: 'Please input your phone!' }]}
-      initialValue={props?.user?.phone}
-    >
-      <Input />
-    </Form.Item>
-
-  
-
-    <Form.Item >
-      <Button type="primary" htmlType="submit" >Save</Button>
-
-    </Form.Item>
-  </Form>
-         </Card>
-      
-       </Col>
-       
-     </Row>
+              <Upload
+                className='upload-avatar'
+                fileList={fileList}
+                onChange={({ fileList }) => handleUpload(fileList)}
+               
+              >
+                {fileList.length < 1 && 'Upload image'}
+              </Upload>
+            </ImgCrop>
+            <h3>About Me:</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tincidunt ultrices risus eu gravida.</p>
+            <h3>Contact Information:</h3>
+            <Form
+              name="basic"
+              initialValues={{ remember: true }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              autoComplete="off"
+            >
+              <Form.Item
+                label="Username"
+                name="name"
+                rules={[{ required: true, message: 'Please input your username!' }]}
+                initialValue={user?.name}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[{ required: true, message: 'Please input your email!', type: "email" }]}
+                initialValue={user?.email}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="Phone"
+                name="phone"
+                rules={[{ required: true, message: 'Please input your phone!' }]}
+                initialValue={user?.phone}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item >
+                <Button type="primary" htmlType="submit" >Save</Button>
+              </Form.Item>
+            </Form>
+          </Card>
+        </Col>
+      </Row>
     </div>
   )
-  
-  
   return (
     <div className="profile-main">
       <ToastContainer></ToastContainer>
-       <h1>Your profile</h1>
-       <div>
-   
-       </div>
-
-    {/* : <Button>Save</Button>} */}
+      <h1>Your profile</h1>
+      <div>
+      </div>
       {!profile ? showProfile : editProfile}
     </div>
   );

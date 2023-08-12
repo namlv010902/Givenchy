@@ -10,7 +10,7 @@
   padding: 5px 10px;
   background-color: #2986CC;
   color:#fff;
-  margin-left: 60px;
+  margin-left: 50px;
   margin-top:3px;
   display: inline-block;
   border-radius: 5px;
@@ -19,4 +19,14 @@
 .upload-avatar:hover{
   background-color: #16537E;
 
+}
+#loadingAvatar{
+  width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    left: 15%;
+}
+.ant-card-body{
+  position: relative;
 }

@@ -1,11 +1,8 @@
 import { Link, useNavigate } from "react-router-dom"
 import './favorite.css'
 import {useEffect} from  "react"
-import { Button } from "antd"
-interface IProps{
-  favorites:any
-}
-const Favorite = (props:IProps) => {
+
+const Favorite = () => {
   const navigate = useNavigate()
   const idUser = JSON.parse(localStorage.getItem('userId')!);
 
@@ -21,7 +18,7 @@ const Favorite = (props:IProps) => {
      <Link to="/">Home/</Link> <p> Sản phẩm yêu thích của bạn</p>
      
 </div> 
-{(props?.favorites?.length >0) ?
+{/* {(props?.favorites?.length >0) ?
 <div className="favoriteProduct">
   {props?.favorites?.map((item:any)=>(
     
@@ -42,7 +39,7 @@ const Favorite = (props:IProps) => {
     
 
      </div>
-     : <h3>Không có sản phẩm yêu thích</h3> }
+     : <h3>Không có sản phẩm yêu thích</h3> } */}
     </div>
   )
 }

@@ -9,13 +9,13 @@ export const authenticateEmailToken = async (req, res, next) => {
         if (err) {
           if (err.name == "JsonWebTokenError") {
             return res.status(401).json({
-              message: "Mã xác minh không hợp lệ!",
+              message: "Invalid verification code!",
               //Token không hợp lệ
             });
           }
           if (err.name == "TokenExpiredError") {
             return res.status(402).json({
-              message: "Mã xác minh đã hết hạn",
+              message: "The verification code has expired",
             });
           }
         }

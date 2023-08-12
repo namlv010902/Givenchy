@@ -1,8 +1,8 @@
 .message-main{
     text-align: center;
-    padding: 20px 100px;
+    padding-top: 50px;
     height: 50vh;
 }
 .message-main>h1{
-    color: #f129;
+    color: #6aa84f;
 }

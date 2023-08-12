@@ -1,13 +1,13 @@
 
 import { Radio, Pagination, Select, Slider, RadioChangeEvent, Button } from 'antd';
 
-import { ICate } from '../../../types/categories';
-import { IProduct } from '../../../types/products';
+import { ICate } from '../../../interface/categories';
+import { IProduct } from '../../../interface/products';
 import './products.css';
 import { useState, useEffect } from "react"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getCategories } from '../../../api/categories';
+import { getCategories } from '../../../service/categories.service';
 import Products from '../../../components/products/Products';
 interface IProps {
   products: IProduct[],
@@ -24,17 +24,12 @@ interface IProps {
 }
 const ProductsPage = (props: IProps) => {
   console.log(props.totalPage);
-
-
-
   const onChangePrice = (value: any) => {
     const min = value[0]
     const max = value[1]
     props.handlePrice(min, max)
   }
   console.log(props.products);
-
-
   const onAddCart = (id: any) => {
     const data = {
       productId: id,
@@ -57,20 +52,20 @@ const ProductsPage = (props: IProps) => {
             <div className="item-aside">
               <h3>Categories</h3>
               <div className="cate">
-          
-              {props?.categories?.map((item: any) => {
-                return (
-                  <button key={item._id} onClick={() => props.handleCategoryProducts(item._id)}> {item?.name}</button> 
-                )
-              })}
+
+                {props?.categories?.map((item: any) => {
+                  return (
+                    <button key={item._id} onClick={() => props.handleCategoryProducts(item._id)}> {item?.name}</button>
+                  )
+                })}
 
 
-            </div>
+              </div>
             </div>
 
             <div className="item-aside">
               <h3>Filter price</h3>
-              <Slider style={{ width: 200 }} range onChange={onChangePrice} defaultValue={[2000, 5000]} max={5000} />
+              <Slider style={{ width: 200 }} range onChange={onChangePrice} defaultValue={[100, 1000]} max={1000} />
             </div>
             <div className="item-aside">
               <h3>Brand</h3>
@@ -84,10 +79,20 @@ const ProductsPage = (props: IProps) => {
               <button>Woman</button>
               <button>Unisex</button>
             </div>
+            <div className="item-aside">
+              <h3>Size</h3>
+              <button>50ml</button>
+              <button>100ml</button>
+              <button>150ml</button>
+            </div>
           </aside>
           <article>
             <div className="banner-product">
-
+              <div className="banner-text">
+                <h3>celebrity perfumes</h3>
+                <h3>For Man & Woman</h3>
+                <button>SHOW NOW</button>
+              </div>
             </div>
             <div id='tab'>
               <div style={{ display: "flex", alignItems: "center" }}>
@@ -96,11 +101,11 @@ const ProductsPage = (props: IProps) => {
 
               <Select
 
-                defaultValue="Sắp xếp theo giá"
+                defaultValue="Sort by name"
                 onChange={(e) => props.onSort(e)}
                 options={[
-                  { value: "asc", label: 'Tăng dần' },
-                  { value: "desc", label: 'Giảm dần' },
+                  { value: "asc", label: 'A - Z' },
+                  { value: "desc", label: 'Z - A' },
 
                 ]}
               />

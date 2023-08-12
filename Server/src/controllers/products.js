@@ -54,15 +54,15 @@ export const createProduct = async (req, res) => {
     await Brand.findByIdAndUpdate(product.brandId, {
       $push: { productId: product._id }
     })
-    for(let item of product.sizes){
+    for (let item of product.sizes) {
       console.log(item.sizeId);
-     await  Size.findByIdAndUpdate(item.sizeId, {
-      $push: { productId: product._id }
-    })
-  }
-    
-   
-   
+      await Size.findByIdAndUpdate(item.sizeId, {
+        $push: { productId: product._id }
+      })
+    }
+
+
+
 
     return res.status(201).json({
       message: "Create product successfully",
@@ -125,9 +125,9 @@ export const getOneProduct = async (req, res) => {
     await product.populate("categoryId.productId")
     await product.populate("brandId")
     await product.populate("sizes.sizeId")
-   for(let item of product.sizes){
-    console.log(item.sizeId);
-   }
+    for (let item of product.sizes) {
+      console.log(item.sizeId);
+    }
     const limitedProducts = product.categoryId.productId.slice(0, 6);
     const productIndexOf = limitedProducts.find(item => item._id == req.params.id)
     console.log(productIndexOf);
@@ -172,12 +172,11 @@ export const filterPrice = async (req, res) => {
     const product = await Products.paginate({}, options);
     const { minPrice, maxPrice } = req.body
     console.log(minPrice, maxPrice);
-    const filter = await product.docs.filter(item => item.price >= minPrice && item.price <= maxPrice
-    )
-    console.log("Lọc: ", filter);
+    const filteredProducts = product.docs.filter(item => item.sizes.find(size => size.price >= minPrice && size.price <= maxPrice));
+
     return res.status(201).json({
       message: "Get all product successfully",
-      filter
+      filteredProducts
     });
   } catch (error) {
     return res.status(400).json({
@@ -185,34 +184,16 @@ export const filterPrice = async (req, res) => {
     });
   }
 }
-// export const productOutstanding = async (req, res) => {
-//   try {
-//     const product = await Products.find({ outstanding: true, categoryId: req.params.idCate })
-//     const limitProduct = product.slice(0, 5)
-//     return res.status(201).json({
-//       message: "Get product completed",
-//       limitProduct
-//     });
-
-//   } catch (error) {
-//     return res.status(400).json({
-//       message: error.message
-//     });
-//   }
-
-// }
-
-export const categoryProducts = async (req, res) => {
+export const productsByGender = async (req, res) => {
   const { _page = 1, _limit = 12 } = req.query
   const options = {
     page: _page,
     limit: _limit,
   }
   try {
-    console.log(req.params.idCate);
-    const products = await Products.paginate({ categoryId: req.params.idCate }, options)
+    const products = await Products.paginate({ gender: req.params.gender }, options)
     return res.status(201).json({
-      message: "Get categoryProducts successfully",
+      message: "Successfully retrieve products by gender",
       products
     });
   } catch (error) {

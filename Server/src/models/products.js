@@ -24,7 +24,11 @@ const productSchema = new mongoose.Schema({
             price: {
                 type: Number,
                 required: true
-            }
+            },
+            inStock: {
+                type: Number,
+                required: true,
+            },
         }
     ],
     brandId: {
@@ -39,10 +43,7 @@ const productSchema = new mongoose.Schema({
         enum: ['Man', 'Woman', 'Unisex']
 
     },
-    inStock: {
-        type: Number,
-        required: true,
-    },
+    
     categoryId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,

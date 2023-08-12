@@ -1,66 +1,79 @@
-import { InputNumber, Form, Radio } from 'antd'
-import './cart.css'
-import { Link, useNavigate } from 'react-router-dom'
-import { ICart } from '../../../types/cart'
-import { Button, Checkbox, Input } from 'antd';
+import { InputNumber } from 'antd';
+import './cart.css';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from 'antd';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Swal from 'sweetalert2';
-import {useEffect} from "react"
-import { scrollToTop } from '../../../api/config';
-interface IProps {
-  cart: ICart
-  updateCart(data: any): void
-  removeOneProductInCart(productId: string,colorId:string): void
-  handleCreateOrder(data: any): void
-}
-const Cart = (props: IProps) => {
-  const navigate = useNavigate()
-  const idUser = JSON.parse(localStorage.getItem('userId')!);
-  console.log(idUser);
-  useEffect(()=>{
-  if(!idUser){
-    navigate("/auth/login")
-  }
-  },[])
-  console.log(props?.cart?.products);
-  const cartId = props.cart?._id
+import { useEffect } from "react";
+import { scrollToTop } from '../../../service/config.service';
+import { useStoreCart } from '../../../store/hooks';
+import { getCart, removeProductInCart, updateCart } from '../../../service/cart.service';
+
+const Cart = () => {
+  const navigate = useNavigate();
   const userId = JSON.parse(localStorage.getItem('userId')!);
-  const onUpdateCart = (value: number, productId: string,colorId:string) => {
-    console.log(value, idUser, productId);
+  const { cart, dispatch } = useStoreCart();
+
+  useEffect(() => {
+    if (!userId) {
+      navigate("/auth/login");
+    }
+  }, []);
+
+  useEffect(() => {
+    getCart(userId)
+      .then(({ data }) => {
+        dispatch({
+          type: "GET_CART",
+          payload: data.cart
+        });
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  const updateQuantity = async (quantity: number, id: string, sizeId: string) => {
+    console.log(quantity);
+    const checkCount = cart.products.find((item: any) => item._id === id);
+    const check = checkCount.productId.sizes.find((item: any) => item.sizeId === sizeId);
+    const { inStock } = check; 
+    if (quantity > inStock) {
+      quantity = inStock;
+      toast.error("Quantity limited in Stock.");
+    }
+
     const data = {
-      quantity: value,
-      userId: idUser,
-      productId: productId,
-      colorId
+      quantity,
+      userId,
+    };
 
+    try {
+      await updateCart(id, data);
+      const { data: updatedCartData } = await getCart(userId);
+      dispatch({
+        type: "GET_CART",
+        payload: updatedCartData.cart
+      });
+    } catch (error) {
+      console.log('Error updating cart:', error);
     }
-    console.log(data);
-    
-    if (value == 0 || !value) {
-      if (window.confirm("Xóa sản phẩm khỏi giỏ hàng")) {
-        props.removeOneProductInCart(productId,colorId)
-        alert("Đã xóa sản phẩm khỏi giỏ hàng")  }
-    } else {
-       props.updateCart(data)
-    }
-  }
-  const removeInCart = (productId: string,sizeId:string) => {
+  };
 
-    props.removeOneProductInCart(  productId,sizeId);
-  }
-  
+  const removeInCart = async (id: string) => {
+    removeProductInCart(id, userId);
+    dispatch({
+      type: "DELETE_PRODUCT_IN_CART",
+      payload: id
+    });
+  };
+
   return (
     <div>
       <ToastContainer></ToastContainer>
-
-      <div className="order-main">
-        
-        {props.cart?.products?.length>0 ?
+      <div className="cart-main">
+        {cart?.products?.length > 0 ? (
           <div id="show-cart">
-
+            <h3>Shopping Bag</h3>
             <table id='cart'>
-
               <thead>
                 <tr>
                   <th>Name</th>
@@ -71,51 +84,52 @@ const Cart = (props: IProps) => {
                   <th>Action</th>
                 </tr>
               </thead>
-
               <tbody>
-                {props.cart.products?.map((item: any) => {
-
-
-
-                  let sum = item.price * item.quantity
-
-
+                {cart.products?.map((item: any) => {
+                  let sum = item.price * item.quantity;
                   return (
                     <tr key={item._id}>
-                      <td>{item.productId.name}({item.sizeId.name})</td>
+                      <td>{item.productId.name}<p style={{ color: "#015E6B", fontWeight: "bold" }}>( {item.sizeId.name} )</p></td>
                       <td><Link to={`/product/${item.productId._id}`} ><img src={item.productId.image} alt="" /></Link></td>
                       <td style={{ color: "#fca120" }}> ${item.price}</td>
                       <td>
-
-                        <InputNumber min={1} defaultValue={item.quantity} onChange={(e) => onUpdateCart(e, item.productId._id,item?.colorId)} />
-
+                        <InputNumber
+                          // formatter={value => `${value}`.replace(/\D/g, '')}
+                          min={1}
+                          // max={item.sizeId.inStock} 
+                          value={item.quantity} 
+                          onChange={(quantity) => updateQuantity(quantity, item._id, item.sizeId._id)}
+                        />
                       </td>
                       <td>${sum}</td>
-                      <td><button className='btn-removeCart' onClick={() => removeInCart(item.productId._id, item.sizeId)} ><i className="fa-regular fa-circle-xmark"></i></button></td>
+                      <td>
+                        <button className='btn-removeCart' onClick={() => removeInCart(item._id)}>
+                          <i className="fa-regular fa-circle-xmark"></i>
+                        </button>
+                      </td>
                     </tr>
-                  )
+                  );
                 })}
-
-
               </tbody>
-
-
             </table>
-            <div className="OrderForm" >
-              
+            <div id="checkout">
+              <h3>TotalPrice: ${cart.totalPrice}</h3>
+              <Link to="/checkout">
+                <button>Checkout</button>
+              </Link>
             </div>
-
           </div>
-          : <div className='cart-err'>
-            <img src="https://bizweb.dktcdn.net/100/331/465/themes/684469/assets/empty-bags.jpg?1541753997372" alt="" />
-
-            <Link to="/products"> <Button onClick={()=>scrollToTop()}>Tiếp tục lựa chọn</Button></Link></div>
-
-        }
-
+        ) : (
+          <div className='cart-err'>   
+            <img src="https://bizweb.dktcdn.net/100/331/465/themes/684469/assets/empty-bags.jpg?1541753997372" alt="" /> <br />
+            <Link to="/products">
+              <Button onClick={() => scrollToTop()}>GO TO WHICH SHOP?</Button>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Cart
+export default Cart;

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { scrollToTop } from '../../../service/config.service'
 import { useEffect, useState } from "react"
 import { getProductBest, getProductNew } from '../../../service/products.service'
-import { IProduct } from '../../../interface/products'
+import { IProduct } from '../../../common/products'
 import Products from '../../../components/products/Products'
 
 const Home = () => {
@@ -43,7 +43,7 @@ const Home = () => {
           <div className="title-child"><h1>BEST SELLER</h1></div>
         </div>
         <div className="products">
-        {product?.map((item: IProduct) => (
+          {product?.map((item: IProduct) => (
             <Products product={item} ></Products>
           ))}
 

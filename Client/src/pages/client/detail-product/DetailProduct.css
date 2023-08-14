@@ -1,5 +1,6 @@
 .detail-main {
     padding: 20px 100px;
+    margin-top: 80px;
 }
 .exist{
     text-align: center;
@@ -66,7 +67,6 @@
 
 .detailProduct>.detailInfo {
     width: 45%;
-    padding: 20px;
     background-color: #fff;
     border-radius: 5px;
     margin: 0 20px;
@@ -174,7 +174,8 @@
 .btn-sizeFocus {
 
     font-weight: 600;
-    background-color: #c77b50;
+    /* background-color: #c77b50; */
+    background-color: #d9135a;
     color: #fff;
     padding: 7px 15px;
     border: none;

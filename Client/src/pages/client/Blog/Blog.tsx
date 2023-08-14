@@ -4,7 +4,7 @@ const Blog = () => {
 
 
   return (
-    <div>
+    <div style={{marginTop:"100px",minHeight:"80vh"}}>
       Blog
 
     </div>

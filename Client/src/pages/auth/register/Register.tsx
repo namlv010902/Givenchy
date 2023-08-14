@@ -51,7 +51,7 @@ export const Register = () => {
   };
 
   return (
-    <div style={{ margin: "20px 100px" }}><ToastContainer></ToastContainer>
+    <div style={{ margin: " 100px" }}><ToastContainer></ToastContainer>
       <div className="menu-login">
         <Link to="/">Home/</Link>Register
       </div>

@@ -2,8 +2,8 @@ import { Button, Select, Form, Input } from 'antd';
 import { useEffect, useState } from "react"
 import { getProduct } from '../../../service/products.service';
 import { useParams } from 'react-router-dom';
-import { IProduct } from '../../../interface/products';
-import { ICate } from '../../../interface/categories';
+import { IProduct } from '../../../common/products';
+import { ICate } from '../../../common/categories';
 interface IProps {
   handleUpdateProduct(id: string, data: any): void
   subCategories: ICate[]

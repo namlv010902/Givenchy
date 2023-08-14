@@ -4,6 +4,8 @@
 }
 .cart-main {
   padding: 30px 60px;
+  margin-top: 80px;
+  min-height: 80vh;
 }
 .cart-main h3{
   margin-bottom: 10px;
@@ -48,9 +50,15 @@ td img {
     background-color: #008060;
     border-radius: 50px;
     color: #fff;
-  
     cursor: pointer;
     text-transform: uppercase;
+    transition: 0.3s ease-in-out;
+    margin-top: 30px;
+}
+#checkout button:hover{
+  background-color: #015E6B;
+  padding: 20px 40px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
 }
 #checkout{
   text-align: right;

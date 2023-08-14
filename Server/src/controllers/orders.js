@@ -1,15 +1,13 @@
 import Order from "../models/orders";
 import Cart from "../models/carts";
-import { populate } from "dotenv";
+
 //Tạo mới đơn hàng
 export const createOrder = async (req, res) => {
   try {
     const { cartId, address, userId, phone, note, customerName } = req.body;
     const cart = await Cart.findById(cartId).populate("products.productId");
-
     const products = cart.products.map((item) => {
-      const { productId, quantity, price,sizeId } = item;
-
+      const { productId, quantity, price, sizeId } = item;
       return {
         productId: productId._id,
         price,
@@ -18,21 +16,21 @@ export const createOrder = async (req, res) => {
       }
 
     });
-    console.log(products);
+     console.log(products);
+
     const order = await Order.create({
-      userId: userId,
-      cartId: cartId,
-      address: address,
-      phone: phone,
-      note: note,
-      products: products,
+      userId,
+      cartId,
+      address,
+      phone,
+      note,
+      products,
       totalPrice: cart.totalPrice,
-      customerName: customerName
+      customerName
     });
     cart.products = []
     cart.totalPrice = 0
     cart.save()
-    // await order.populate("products.productId")
 
     return res.status(201).json({
       message: "Create order successfully",
@@ -143,7 +141,7 @@ export const updateOrder = async (req, res) => {
 // => hủy đơn hàng chỉ thay đổi trạng thái thành đã hủy
 export const cancelOrder = async (req, res) => {
   try {
-    const order = await Order.findByIdAndUpdate(req.params.id, { status: "Đã hủy" }, { new: true }).populate("products.productId");
+    const order = await Order.findByIdAndUpdate(req.params.id, { status: "Cancelled" }, { new: true }).populate("products.productId").populate("products.sizeId");
     const { canCancel } = checkCancellationTime(order);
     if (!order) {
       return res.status(401).json({

@@ -1,6 +1,6 @@
 import { Button, Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { IProduct } from '../../../interface/products';
+import { IProduct } from '../../../common/products';
 import { Link, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
@@ -45,7 +45,7 @@ const ListProducts = (props: IProps) => {
       render: (category: any) => <p>{category?.name}</p>
 
     },
- 
+
     {
       title: 'Action',
       key: 'action',

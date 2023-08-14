@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { Link } from 'react-router-dom';
 import './login.css'
 import { scrollToTop } from '../../../service/config.service';
@@ -37,7 +37,7 @@ const Login = () => {
   };
   return (
   
-    <div style={{ margin: "20px 100px" }}>   <ToastContainer></ToastContainer>
+    <div style={{ margin:" 100px" }}>   <ToastContainer></ToastContainer>
       <div className="menu-login">
         <Link to="/">Home/</Link>Login
       </div>
@@ -71,7 +71,7 @@ const Login = () => {
           <Form.Item
             label="Password"
             name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            rules={[{ required: true, message: 'Please input your password!' }, { min: 6, message: 'The password must be at least 6 characters long!' }]}
             hasFeedback
           >
             <Input.Password />

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { CartContext, CommentContext, OrderContext, UserContext } from "./context";
+import { CartContext, CategoryContext, CommentContext, OrderContext, UserContext } from "./context";
 
 export const useStoreCart=()=>{
     return useContext(CartContext)
@@ -12,4 +12,7 @@ export const useStoreOrder=()=>{
 }
 export const useStoreUser=()=>{
     return useContext(UserContext)
+}
+export const useStoreCategory=()=>{
+    return useContext(CategoryContext)
 }

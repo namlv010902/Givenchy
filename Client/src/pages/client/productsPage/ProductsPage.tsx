@@ -1,47 +1,49 @@
 
-import { Radio, Pagination, Select, Slider, RadioChangeEvent, Button } from 'antd';
-
-import { ICate } from '../../../interface/categories';
-import { IProduct } from '../../../interface/products';
+import { Pagination, Select, Slider } from 'antd';
+import { IProduct } from '../../../common/products';
 import './products.css';
-import { useState, useEffect } from "react"
-import { ToastContainer, toast } from 'react-toastify';
+import {  useEffect } from "react"
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getCategories } from '../../../service/categories.service';
 import Products from '../../../components/products/Products';
+import { useStoreCategory } from '../../../store/hooks';
+import { ISize } from '../../../common/size';
 interface IProps {
   products: IProduct[],
   totalPage: number,
   onPage(page: number): void
   onSort(value: any): void
   handlePrice(min: number, max: number): void
-  categories: ICate[],
   handleCategoryProducts(id: string): void
   handleAddToCart(data: any): void
-  loading: boolean,
-  material: any,
-  brand: any
+  productByGender(gender:string): void
+  sizes:ISize[]
+  handleProductsBySize(sizeId:string): void
+  loading:boolean
+  brand:any
+  handleProductByBrand(id:string):void
 }
 const ProductsPage = (props: IProps) => {
   console.log(props.totalPage);
+  const { categories, dispatch } = useStoreCategory()
+  useEffect(() => {
+    getCategories().then(({ data }) => {
+      dispatch({
+        type: 'GET_CATEGORIES',
+        payload: data.category
+      })
+    })
+  }, [])
+
+
   const onChangePrice = (value: any) => {
     const min = value[0]
     const max = value[1]
     props.handlePrice(min, max)
   }
-  console.log(props.products);
-  const onAddCart = (id: any) => {
-    const data = {
-      productId: id,
-      quantity: 1,
-      userId: JSON.parse(localStorage.getItem('userId')!)
-    }
-    if (!JSON.parse(localStorage.getItem('userId')!)) {
-      return toast.error("Bạn chưa đăng nhập")
-    }
-    props.handleAddToCart(data)
-  }
 
+  const gender =['Man', 'Woman', 'Unisex']
   return (
     <div>
       <ToastContainer></ToastContainer>
@@ -52,8 +54,7 @@ const ProductsPage = (props: IProps) => {
             <div className="item-aside">
               <h3>Categories</h3>
               <div className="cate">
-
-                {props?.categories?.map((item: any) => {
+                {categories?.map((item: any) => {
                   return (
                     <button key={item._id} onClick={() => props.handleCategoryProducts(item._id)}> {item?.name}</button>
                   )
@@ -70,20 +71,21 @@ const ProductsPage = (props: IProps) => {
             <div className="item-aside">
               <h3>Brand</h3>
               {props?.brand?.map((item: any) => (
-                <button>{item.name}</button>
+                <button onClick={()=>props.handleProductByBrand(item._id)}>{item.name}</button>
               ))}
             </div>
             <div className="item-aside">
               <h3>Gender</h3>
-              <button>Man</button>
-              <button>Woman</button>
-              <button>Unisex</button>
+              {gender.map((item:any)=>(
+                <button onClick={()=>props.productByGender(item)}>{item}</button>
+              ))}
             </div>
             <div className="item-aside">
               <h3>Size</h3>
-              <button>50ml</button>
-              <button>100ml</button>
-              <button>150ml</button>
+              {props?.sizes?.map((item:any)=>(
+                <button onClick={()=>props.handleProductsBySize(item._id)}>{item.name}</button>
+              ))}
+             
             </div>
           </aside>
           <article>
@@ -96,7 +98,7 @@ const ProductsPage = (props: IProps) => {
             </div>
             <div id='tab'>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <p>Ghế: Tìm được 300 kết quả</p>
+                {/* <p>Ghế: Tìm được 300 kết quả</p> */}
               </div>
 
               <Select
@@ -114,7 +116,7 @@ const ProductsPage = (props: IProps) => {
               <div>
                 <div className="products" >
 
-                  {props.products?.map((item, index) => {
+                  {props.products?.map((item) => {
                     return (
                       <Products product={item}></Products>
                     )

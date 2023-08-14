@@ -35,6 +35,8 @@ export const createSize = async (req, res) => {
     const options = {
       page: _page,
       limit: _limit,
+      populate: [{ path: 'brandId' }, { path: 'categoryId' }, { path: 'sizes.sizeId' }],
+
     }
     try {
       console.log(req.params.id);

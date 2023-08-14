@@ -1,7 +1,7 @@
 .checkout-main {
   padding: 30px 60px;
   display: flex;
-
+  margin-top: 80px;
 }
 
 .checkout {
@@ -30,7 +30,8 @@ textarea:focus {
 }
 
 .form-group>button {
-  background-color: #00aaf0;
+  /* background-color: #00aaf0; */
+  background: linear-gradient(0deg,#1786fb,#2cfefe)!important;
   border: none;
   text-transform: uppercase;
   cursor: pointer;

@@ -5,7 +5,10 @@ header {
     justify-content: space-between;
     background-color: #fff;
     border-bottom: 1px solid #ccc;
-
+   position: fixed;
+   z-index: 2;
+   width: 100%;
+   top: 0;
 }
 
 #avatar {

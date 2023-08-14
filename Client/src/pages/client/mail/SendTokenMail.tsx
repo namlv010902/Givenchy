@@ -37,10 +37,16 @@ const SendTokenMail = () => {
     if (email && !errEmail) {
       setIsLoading(true)
       sendMailer(email).then(({ data }) => {
+        
         console.log(data)
         navigate("/verifyTokenMail")
       })
-        .catch(({ response }) => toast.error(response.data.message));
+        .catch(({ response }) =>{
+           toast.error(response.data.message)
+           setIsLoading(false)
+        }
+         
+         )
     } else {
       setErrEmail(true)
     }

@@ -6,11 +6,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import type { RcFile, UploadFile } from 'antd/es/upload/interface';
+import type { UploadFile } from 'antd/es/upload/interface';
 import axios from 'axios';
 import { useStoreUser } from '../../../store/hooks';
 import { getUser, updateProfile } from '../../../service/auth.service';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { scrollToTop } from '../../../service/config.service';
 
 const Profile = () => {
   const [profile, setProfile] = useState(false)
@@ -59,6 +60,7 @@ const Profile = () => {
       setProfile(false)
       toast.success('Profile updated successfully')
     })
+    .catch(({response})=>toast.error(response.data.message))
   };
   const [fileList] = useState<UploadFile[]>([]);
 
@@ -108,11 +110,14 @@ const Profile = () => {
             <li>Email: {user?.email}</li>
             <li>Phone: {user?.phone}</li>
           </ul>
-          <Button onClick={() => setProfile(true)}>Edit profile</Button>
+          <Button className='ant-btn css-dev-only-do-not-override-12upa3x ant-btn-primary' onClick={() => setProfile(true)}>Edit profile</Button>
+          <Link style={{marginLeft:"20px",backgroundColor:"#3a8d9e",color:"#fff", borderRadius:"6px",padding:"6px 15px"}}   onClick={()=>scrollToTop()} to="/changePassword" >Change password</Link>
         </Card>
       </Col>
     </Row>
   )
+
+
   const editProfile = (
     <div>
       <Row justify="center">
@@ -186,6 +191,7 @@ const Profile = () => {
       <h1>Your profile</h1>
       <div>
       </div>
+
       {!profile ? showProfile : editProfile}
     </div>
   );

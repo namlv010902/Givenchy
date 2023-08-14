@@ -2,17 +2,20 @@ import { Button } from "antd"
 import { useState, useEffect } from "react"
 import "./OrderDetail.css"
 import { useParams } from "react-router-dom"
-import { cancelOrder, orderDetail, resetOrder } from "../../../service/order.service"
+import { cancelOrder, orderDetail } from "../../../service/order.service"
+import { IOrder } from "../../../common/order"
 
 const OrderDetail = () => {
   const { id } = useParams()
-  const [detailOrder, setDetailOrder] = useState()
+  const [detailOrder, setDetailOrder] = useState<IOrder>()
   const [remainingTime, setRemainingTime] = useState()
   useEffect(() => {
-    orderDetail(id).then(({ data }) => {
-      setDetailOrder(data.order)
-      setRemainingTime(data.remainingTimeMessage)
-    })
+    if(id){
+      orderDetail(id).then(({ data }) => {
+        setDetailOrder(data.order)
+        setRemainingTime(data.remainingTimeMessage)
+      })
+    }
   }, [])
 
 
@@ -35,43 +38,43 @@ const OrderDetail = () => {
       <div className="order-main">
       {detailOrder ? 
       <div>
-        <h2 className="order-title">Chi tiết đơn hàng</h2>
+        <h2 className="order-title">Order details</h2>
         <div className="order-info">
           <div className="order-info-item">
-            <span className="info-item-label">Số đơn hàng:</span>
+            <span className="info-item-label">Invoice ID:</span>
             <span className="info-item-value">{detailOrder?._id}</span>
           </div>
           <div className="order-info-item">
-            <span className="info-item-label">Người đặt:</span>
+            <span className="info-item-label">CustomerName:</span>
             <span className="info-item-value">{detailOrder?.customerName}</span>
           </div>
           <div className="order-info-item">
-            <span className="info-item-label">Số điện thoại :</span>
+            <span className="info-item-label">Phone :</span>
             <span className="info-item-value">{detailOrder?.phone}</span>
           </div>
           <div className="order-info-item">
-            <span className="info-item-label">Địa chỉ nhận hàng:</span>
+            <span className="info-item-label">Shipping address:</span>
             <span className="info-item-value">{detailOrder?.address}</span>
           </div>
           <div className="order-info-item">
-            <span className="info-item-label">Ghi chú:</span>
+            <span className="info-item-label">Note:</span>
             <span className="info-item-value">{detailOrder?.note}</span>
           </div>
           <div className="order-info-item">
-            <span className="info-item-label">Ngày đặt hàng:</span>
+            <span className="info-item-label">Order date:</span>
             <span className="info-item-value">{outTime}</span>
           </div>
           <div className="order-info-item">
-            <span className="info-item-label">Dự kiến ngày nhận: </span>
+            <span className="info-item-label">Delivery date: </span>
             <span className="info-item-value">{detailOrder?.DeliveryDate}</span>
           </div>
           <div className="order-info-item">
-            <span className="info-item-label">Trạng thái:</span>
+            <span className="info-item-label">Order status:</span>
             <span className="info-item-value status-shipped">{detailOrder?.status}</span>
           </div>
           <div className="order-info-item">
-            <span className="info-item-label">Thanh toán:</span>
-            <span className="info-item-value">{(!detailOrder?.pay) ? "Chưa thanh toán" : "Đã thanh toán"}</span>
+            <span className="info-item-label">Payment status:</span>
+            <span className="info-item-value">{(!detailOrder?.pay) ? "Unpaid" : "Paid"}</span>
           </div>
         </div>
         <div className="order-items">
@@ -81,8 +84,8 @@ const OrderDetail = () => {
               <div className="product-details">
                 <h3 className="product-name">{item.productId.name}( {item.sizeId.name} )</h3>
                 <p className="product-price">${item.price}</p>
-                <p className="product-quantity">Số lượng: {item.quantity}</p>
-                <p className="product-total">Tổng cộng: ${item.quantity * item.price}</p>
+                <p className="product-quantity">Quantity: {item.quantity}</p>
+                <p className="product-total">Sum: ${item.quantity * item.price}</p>
               </div>
             </div>
           ))}
@@ -90,11 +93,11 @@ const OrderDetail = () => {
 
         </div>
         <div className="order-summary">
-          <h3 className="summary-title">Tổng cộng:</h3>
+          <h3 className="summary-title">Total payment:</h3>
           <p className="summary-amount">${detailOrder?.totalPrice}</p>
         </div>
-        {(detailOrder?.status == "Đã hủy" || !remainingTime) ? <Button disabled>Hủy</Button> :
-          <div><Button onClick={() => handleCancel(detailOrder?._id)}>Hủy đơn hàng</Button><p>{remainingTime}</p></div>
+        {(detailOrder?.status == "Cancelled" || !remainingTime) ? <Button disabled>Cancel</Button> :
+          <div><Button onClick={() => handleCancel(detailOrder?._id)}>Cancel order</Button><p>{remainingTime}</p></div>
         }
       </div>
         :<div className='exist' >

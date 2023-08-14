@@ -1,6 +1,6 @@
 import React, { useReducer } from "react";
-import { CartContext, CommentContext, OrderContext, UserContext } from "./context";
-import { cartReducer, commentReducer, initCart, initComment, initOrder, initUser, orderReducer, userReducer } from "./reducer";
+import { CartContext, CategoryContext, CommentContext, OrderContext, UserContext } from "./context";
+import { cartReducer, categoryReducer, commentReducer, initCart, initCategory, initComment, initOrder, initUser, orderReducer, userReducer } from "./reducer";
 type IProps = {
     children?: React.ReactNode
 }
@@ -21,4 +21,8 @@ export const OrderProvider = ({ children }: IProps) => {
 export const UserProvider = ({ children }: IProps) => {
     const [user, dispatchUser] = useReducer(userReducer, initUser)
     return <UserContext.Provider value={{ user, dispatchUser }} >{children}</UserContext.Provider>
+}
+export const CategoryProvider = ({ children }: IProps) => {
+    const [categories, dispatch] = useReducer(categoryReducer, initCategory)
+    return <CategoryContext.Provider value={{ categories, dispatch }} >{children}</CategoryContext.Provider>
 }

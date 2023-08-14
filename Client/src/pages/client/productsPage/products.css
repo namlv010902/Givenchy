@@ -1,5 +1,6 @@
 .product-main {
     padding: 20px 100px;
+    margin-top: 80px;
 }
 
 #filterPrice {
@@ -119,7 +120,8 @@ aside button {
 
 aside button:focus {
 
-    color: #f12;
+    color: #d9135a;
+    font-weight: bold;
 }
 
 aside button img {

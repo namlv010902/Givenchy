@@ -1,6 +1,7 @@
 .main-favorite{
     padding: 20px 100px;
     min-height: 80vh;
+    margin-top: 80px;
 }
 .image-favorite img{
     width: 200px;

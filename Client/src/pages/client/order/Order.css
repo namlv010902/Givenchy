@@ -1,6 +1,7 @@
 .order-main{
     padding: 20px 100px;
-    min-height: 60vh;
+    min-height: 80vh;
+    margin-top: 80px;
 }
 #table-order{
     width: 100%;
@@ -16,5 +17,8 @@
 #table-order th{
     background-color: #015E6B;
     color:#fff;
+    padding: 10px;
+}
+#table-order td{
     padding: 10px;
 }

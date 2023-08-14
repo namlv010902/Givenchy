@@ -3,6 +3,9 @@
     width: 100%;
     height: 730px;
 }
+.banner{
+    margin-top: 80px;
+}
 .image-container{
     position: relative;
 }

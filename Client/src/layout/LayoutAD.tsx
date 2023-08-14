@@ -10,11 +10,9 @@ import {
 import type { MenuProps } from 'antd';
 import { Layout, Menu, theme } from 'antd';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-interface IProps{
-  user:any
-}
-const LayoutAD = (props:IProps) => {
-  console.log(props);
+
+const LayoutAD = () => {
+ 
   
     const navigate = useNavigate()
     

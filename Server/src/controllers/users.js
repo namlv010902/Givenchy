@@ -20,7 +20,7 @@ export const updateProfile = async (req, res) => {
 
     if (check) {
       return res.status(401).json({
-        message: "Email đã được đăng ký"
+        message: "The Email was registered"
       })
     }
     const emailExists = await User.findByIdAndUpdate(userId, req.body, { new: true })
@@ -140,7 +140,7 @@ export const verifyTokenEmail = async (req, res) => {
 export const forgotPassword = async (req, res) => {
   try {
     console.log(req.user);
-    const { newPassword, confirmPassword } = req.body;
+    const { newPassword } = req.body;
     const { error } = schemaPassword.validate(req.body, { abortEarly: false })
     if (error) {
       return res.status(402).json({
@@ -160,3 +160,26 @@ export const forgotPassword = async (req, res) => {
     });
   }
 };
+export const changePassword = async (req, res) => {
+  try {
+    const { newPassword } = req.body;
+    const { error } = schemaPassword.validate(req.body, { abortEarly: false })
+    if (error) {
+      return res.status(402).json({
+        message: error.details.map(item => item.message)
+      })
+    }
+    const hasPassword = await bcrypt.hash(newPassword, 10)
+    const user = await User.findByIdAndUpdate(req.user._id, { password: hasPassword }, { new: true });
+    user.password = undefined;
+    return res.status(201).json({
+      message: "Updated password successfully",
+      user
+    });
+  } catch (error) {
+    return res.status(400).json({
+      error: error.message
+    });
+  }
+};
+

@@ -1,7 +1,8 @@
-import { ICart } from "../interface/cart";
-import { IComment } from "../interface/comment";
-import { IOrder } from "../interface/order";
-import { IUser } from "../interface/user";
+import { ICart } from "../common/cart";
+import { ICate } from "../common/categories";
+import { IComment } from "../common/comment";
+import { IOrder } from "../common/order";
+import { IUser } from "../common/user";
 
 export const initCart: ICart[] = []
 
@@ -15,8 +16,8 @@ export const cartReducer = (state: ICart[], action: { type: string, payload: ICa
         // case 'POST_CART':
         //     return [...state, {...action.payload}];
         case 'DELETE_PRODUCT_IN_CART':
-            const product = state.products.find(p => p._id === action.payload)
-            const updatedProducts = state.products.filter(item => item._id !== action.payload);
+            const product = state.products.find((p:any) => p._id === action.payload)
+            const updatedProducts = state.products.filter((item:any) => item._id !== action.payload);
             const updateTotalPrice = state.totalPrice - product.price * product.quantity
             return {
                 ...state,
@@ -80,6 +81,17 @@ export const userReducer = (state: IUser[], action: { type: string, payload: IUs
         case 'UPDATE_PROFILE':
             return action.payload
 
+        default: return state
+    }
+}
+
+export const initCategory: ICate[] = []
+
+export const categoryReducer = (state: ICate[], action: { type: string, payload: ICate[] }) => {
+    console.log("running cate...", state)
+    switch (action.type) {
+        case 'GET_CATEGORIES':
+            return action.payload
         default: return state
     }
 }

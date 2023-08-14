@@ -1,10 +1,12 @@
 .profile-main{
     min-height: 80vh;
     padding: 20px 100px;
+    margin-top: 80px;
 }
 .avatar{
     width: 200px;
     height: 200px;
+    margin-bottom: 30px;
 }
 .upload-avatar{
   padding: 5px 10px;

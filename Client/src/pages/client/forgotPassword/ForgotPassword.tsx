@@ -28,7 +28,7 @@ const ForgotPassword = () => {
     if (!confirmPassword) {
       setErrConfirmPassword(true)
     }
-    if (newPassword && confirmPassword && newPassword === confirmPassword) {
+    if (newPassword.length>=6 && confirmPassword && newPassword === confirmPassword) {
       // alert("oki")
       const data = { newPassword, confirmPassword }
       forgotPassword(data).then(({ data }) => {
@@ -44,7 +44,7 @@ const ForgotPassword = () => {
     handleBlurNewPassword(value.trim())
   }
   const handleBlurNewPassword = (value: any) => {
-    if (value.length > 0) {
+    if (value.length >= 6) {
       setErrNewPassword(false)
     } else {
       setErrNewPassword(true);
@@ -69,13 +69,13 @@ const ForgotPassword = () => {
         <div className="formItem" style={{marginLeft:"25px"}}>
           <label htmlFor="">Enter your new password: </label><br />
           <input type="password" id="password" onBlur={() => handleBlurNewPassword(newPassword)} onChange={e => handleChangeNewPassword(e)} />
-          <p style={{ color: "red" }}>{errNewPassword ? "This is required" : ""}</p>     
+          <p style={{ color: "red" }}>{errNewPassword ? "Password is required and must be at least 6 characters" : ""}</p>     
           <label htmlFor="confirmPassword">Confirm Password:</label>
         <input type="password" id="confirmPassword"
            onBlur={() => handleBlurConfirmPassword(confirmPassword)}
            onChange={e => handleChangeConfirmPassword(e)}
         />
-          {!comparePassword ? <p style={{ color: "red" }}>{errConfirmPassword ? "This is required" : ""}</p> : <p style={{ color: "red" }}>{comparePassword ? "ConfirmPassword don't match password" : ""}</p>}        
+          {!comparePassword ? <p style={{ color: "red" }}>{errConfirmPassword ? "Confirm Password is required" : ""}</p> : <p style={{ color: "red" }}>{comparePassword ? "ConfirmPassword don't match password" : ""}</p>}        
           <button>
             SAVE
           </button>

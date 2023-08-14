@@ -13,7 +13,7 @@ export const getAllProduct = async (req, res) => {
     sort: {
       [_sort]: _order === "desc" ? -1 : 1,
     },
-    populate: { path: 'categoryId' }
+    populate: [{ path: 'brandId' }, { path: 'categoryId' }, { path: 'sizes.sizeId' }],
   };
   const searchText = _q ? unidecode(_q) : ''; // Chuyển đổi chuỗi tìm kiếm thành không dấu
 
@@ -121,22 +121,19 @@ export const updateProduct = async (req, res) => {
 export const getOneProduct = async (req, res) => {
   try {
     const product = await Products.findById(req.params.id).populate("categoryId")
-
     await product.populate("categoryId.productId")
     await product.populate("brandId")
     await product.populate("sizes.sizeId")
-    for (let item of product.sizes) {
-      console.log(item.sizeId);
-    }
-    const limitedProducts = product.categoryId.productId.slice(0, 6);
-    const productIndexOf = limitedProducts.find(item => item._id == req.params.id)
-    console.log(productIndexOf);
-    const productIndex = limitedProducts.indexOf(productIndexOf)
-    limitedProducts.splice(productIndex, 1)
+ 
+    // const limitedProducts = product.categoryId.productId.slice(0, 6);
+    // const productIndexOf = limitedProducts.find(item => item._id == req.params.id)
+    // console.log(productIndexOf);
+    // const productIndex = limitedProducts.indexOf(productIndexOf)
+    // limitedProducts.splice(productIndex, 1)
     return res.status(201).json({
       message: "Get product successfully",
       product,
-      relatedProducts: limitedProducts
+      // relatedProducts: limitedProducts
     })
   } catch (error) {
     return res.status(400).json({
@@ -165,6 +162,8 @@ export const filterPrice = async (req, res) => {
     sort: {
       [_sort]: _order === "desc" ? -1 : 1,
     },
+    populate: [{ path: 'brandId' }, { path: 'categoryId' }, { path: 'sizes.sizeId' }],
+
   };
 
   try {
@@ -189,6 +188,8 @@ export const productsByGender = async (req, res) => {
   const options = {
     page: _page,
     limit: _limit,
+    populate: [{ path: 'brandId' }, { path: 'categoryId' }, { path: 'sizes.sizeId' }],
+
   }
   try {
     const products = await Products.paginate({ gender: req.params.gender }, options)

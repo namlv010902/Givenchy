@@ -1,4 +1,4 @@
-import { InputNumber } from 'antd';
+import { InputNumber,message } from 'antd';
 import './cart.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
@@ -13,7 +13,7 @@ const Cart = () => {
   const navigate = useNavigate();
   const userId = JSON.parse(localStorage.getItem('userId')!);
   const { cart, dispatch } = useStoreCart();
-
+  // const [messageApi, contextHolder] = message.useMessage();
   useEffect(() => {
     if (!userId) {
       navigate("/auth/login");
@@ -33,14 +33,20 @@ const Cart = () => {
 
   const updateQuantity = async (quantity: number, id: string, sizeId: string) => {
     console.log(quantity);
+    if(quantity==null){
+      quantity = 1
+    }
     const checkCount = cart.products.find((item: any) => item._id === id);
     const check = checkCount.productId.sizes.find((item: any) => item.sizeId === sizeId);
     const { inStock } = check; 
     if (quantity > inStock) {
       quantity = inStock;
+      // messageApi.open({
+      //   type: 'error',
+      //   content: 'Quantity limited in Stock',
+      // });
       toast.error("Quantity limited in Stock.");
     }
-
     const data = {
       quantity,
       userId,
@@ -94,7 +100,6 @@ const Cart = () => {
                       <td style={{ color: "#fca120" }}> ${item.price}</td>
                       <td>
                         <InputNumber
-                          // formatter={value => `${value}`.replace(/\D/g, '')}
                           min={1}
                           // max={item.sizeId.inStock} 
                           value={item.quantity} 

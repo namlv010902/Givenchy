@@ -12,6 +12,7 @@
 
 .home-main {
     padding: 20px 100px;
+    
 }
 
 .product img {
@@ -99,6 +100,7 @@
 
 .content {
     padding: 15px;
+
 }
 
 .chanel-img img {
@@ -171,7 +173,7 @@
     display: inline;
 }
 
-.content p {
+.content >p >a {
     margin: 6px 0;
     overflow: hidden;
     display: -webkit-box;
@@ -183,6 +185,7 @@
     height: 2.25rem;
     color: #A05F43;
     text-transform: uppercase;
+    text-decoration: none;
 }
 
 .content strong {

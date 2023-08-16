@@ -81,7 +81,7 @@ const DetailProduct = () => {
         payload: data.cart
       });
     })
-    if (cart.products) {
+    if (cart?.products) {
       const productExist = cart.products.find((item: any) => item.productId._id == product?._id && item.sizeId._id == sizeId)
       if (productExist) {
         if (quantity > (inStock - productExist.quantity)) {

@@ -3,6 +3,7 @@ import Categories from "../models/categories"
 import unidecode from "unidecode"
 import Brand from "../models/brands";
 import Size from "../models/size";
+import { validateProduct } from "../validation/products";
 
 
 export const getAllProduct = async (req, res) => {
@@ -45,8 +46,14 @@ export const getAllProduct = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   try {
-    const product = await Products.create(req.body)
+    const { error } = validateProduct.validate(req.body, { abortEarly: false })
+    if (error) {
+      return res.status(401).json({
+        message: error.details.map(error => error.message)
+      })
+    }
 
+    const product = await Products.create(req.body)
     await Categories.findByIdAndUpdate(product.categoryId, {
       $push: { productId: product._id }
     })
@@ -60,10 +67,6 @@ export const createProduct = async (req, res) => {
         $push: { productId: product._id }
       })
     }
-
-
-
-
     return res.status(201).json({
       message: "Create product successfully",
       product
@@ -79,8 +82,14 @@ export const createProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   try {
+    const { error } = validateProduct.validate(req.body, { abortEarly: false })
+    if (error) {
+      return res.status(403).json({
+        message: error.details.map(error => error.message)
+      })
+    }
 
-    const { categoryId, brandId } = req.body;
+    const { categoryId, brandId, sizes } = req.body;
     const product = await Products.findByIdAndUpdate(req.params.id, req.body);
 
     // Update new category
@@ -101,12 +110,27 @@ export const updateProduct = async (req, res) => {
       },
     });
     await Brand.findByIdAndUpdate(brandId, {
-
       $addToSet: {
         productId: product._id,
       },
     });
-
+    // xóa id product ở danh mục cũ
+    for (let item of product.sizes) {
+      console.log(item.sizeId);
+      await Size.findByIdAndUpdate(item.sizeId, {
+        $pull: {
+          productId: product._id,
+        },
+      });
+    }
+    // Thêm id product vào danh mục mới
+    for (let item of sizes) {
+      await Size.findByIdAndUpdate(item.sizeId, {
+        $addToSet: {
+          productId: product._id,
+        },
+      });
+    }
     return res.status(201).json({
       message: "Update product successfully",
       product
@@ -124,7 +148,7 @@ export const getOneProduct = async (req, res) => {
     await product.populate("categoryId.productId")
     await product.populate("brandId")
     await product.populate("sizes.sizeId")
- 
+
     // const limitedProducts = product.categoryId.productId.slice(0, 6);
     // const productIndexOf = limitedProducts.find(item => item._id == req.params.id)
     // console.log(productIndexOf);
@@ -143,17 +167,47 @@ export const getOneProduct = async (req, res) => {
 }
 export const removeProduct = async (req, res) => {
   try {
-    await Products.findByIdAndDelete(req.params.id)
+    // Tìm và lấy thông tin sản phẩm cần xóa
+    const product = await Products.findById(req.params.id);
+
+    // Lấy các trường sizeId, brandId, categoryId từ sản phẩm
+    const { sizes, brandId, categoryId } = product;
+
+    // Xóa id của sản phẩm khỏi bảng size
+    for (let item of sizes) {
+      await Size.findByIdAndUpdate(item.sizeId, {
+        $pull: {
+          productId: req.params.id,
+        },
+      });
+    }
+
+    // Xóa id của sản phẩm khỏi bảng brand
+    await Brand.findByIdAndUpdate(brandId, {
+      $pull: {
+        productId: req.params.id,
+      },
+    });
+
+    // Xóa id của sản phẩm khỏi bảng category
+    await Categories.findByIdAndUpdate(categoryId, {
+      $pull: {
+        productId: req.params.id,
+      },
+    });
+
+    // Xóa sản phẩm
+    await Products.findByIdAndDelete(req.params.id);
+
     return res.status(201).json({
       message: "Remove product successfully",
-
-    })
+    });
   } catch (error) {
     return res.status(400).json({
-      message: error.message
-    })
+      message: error.message,
+    });
   }
-}
+};
 export const filterPrice = async (req, res) => {
   const { _page = 1, _order = "asc", _limit = 8, _sort = "createAt", _q = "" } = req.query;
   const options = {

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { CartContext, CategoryContext, CommentContext, FavoriteContext, OrderContext, ProductContext, UserContext } from "./context";
+import { BrandContext, CartContext, CategoryContext, CommentContext, FavoriteContext, OrderContext, ProductContext, SizeContext, UserContext } from "./context";
 
 export const useStoreCart=()=>{
     return useContext(CartContext)
@@ -21,4 +21,10 @@ export const useStoreFavorite=()=>{
 }
 export const useStoreProducts=()=>{
     return useContext(ProductContext)
+}
+export const useStoreSize=()=>{
+    return useContext(SizeContext)
+}
+export const useStoreBrand=()=>{
+    return useContext(BrandContext)
 }

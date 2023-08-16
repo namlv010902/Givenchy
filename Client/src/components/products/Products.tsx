@@ -62,7 +62,7 @@ const Products = (props: IProps) => {
       });
     })
     // sản phẩm trong giỏ hàng
-    if (cart.products) {
+    if (cart?.products) {
       const productExistInCart = cart.products.find((item: any) => item.productId._id == props.product?._id && item.sizeId._id)
       if (productExistInCart) {
         if (productCurrent) {

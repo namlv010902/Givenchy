@@ -169,6 +169,7 @@
     border-radius: 50px;
     font-weight: 600;
     border: none;
+    font-size: 13px;
 }
 
 .btn-sizeFocus {
@@ -182,6 +183,7 @@
     margin-left: 10px;
     cursor: pointer;
     border-radius: 50px;
+    font-size: 13px;
 }
 
 #form-add-cart p:hover {

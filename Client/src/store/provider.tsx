@@ -1,6 +1,6 @@
 import React, { useReducer } from "react";
-import { CartContext, CategoryContext, CommentContext, FavoriteContext, OrderContext, ProductContext, UserContext } from "./context";
-import { cartReducer, categoryReducer, commentReducer, favoriteReducer, initCart, initCategory, initComment, initFavorite, initOrder, initProducts, initUser, orderReducer, productReducer, userReducer } from "./reducer";
+import { BrandContext, CartContext, CategoryContext, CommentContext, FavoriteContext, OrderContext, ProductContext, SizeContext, UserContext } from "./context";
+import { brandReducer, cartReducer, categoryReducer, commentReducer, favoriteReducer, initBrand, initCart, initCategory, initComment, initFavorite, initOrder, initProducts, initSize, initUser, orderReducer, productReducer, sizeReducer, userReducer } from "./reducer";
 type IProps = {
     children?: React.ReactNode
 }
@@ -31,4 +31,12 @@ export const FavoriteProvider = ({ children }: IProps) => {
 export const ProductProvider = ({ children }: IProps) => {
     const [products, dispatch] = useReducer(productReducer, initProducts)
     return <ProductContext.Provider value={{ products, dispatch }} >{children}</ProductContext.Provider>
+}
+export const SizeProvider = ({ children }: IProps) => {
+    const [sizes, dispatch] = useReducer(sizeReducer, initSize)
+    return <SizeContext.Provider value={{ sizes, dispatch }} >{children}</SizeContext.Provider>
+}
+export const BrandProvider = ({ children }: IProps) => {
+    const [brands, dispatch] = useReducer(brandReducer, initBrand)
+    return <BrandContext.Provider value={{ brands, dispatch }} >{children}</BrandContext.Provider>
 }

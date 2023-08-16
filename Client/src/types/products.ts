@@ -1,3 +1,4 @@
+import { IBrand } from "./brand";
 import { ICate } from "./categories";
 import { ISize } from "./size";
 export interface IResSize{
@@ -13,7 +14,6 @@ export interface IProduct{
     description:string;
     categoryId:ICate;
     sizes:IResSize[],
-    brandId:{
-        name:string
-    }
+    brandId:IBrand
+    gender:string
 }

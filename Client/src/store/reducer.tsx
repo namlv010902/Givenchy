@@ -1,9 +1,11 @@
+import { IBrand } from "../types/brand";
 import { ICart } from "../types/cart";
 import { ICate } from "../types/categories";
 import { IComment } from "../types/comment";
 import { IFavorite } from "../types/favorite";
 import { IOrder } from "../types/order";
 import { IProduct } from "../types/products";
+import { ISize } from "../types/size";
 import { IUser } from "../types/user";
 
 export const initCart: ICart[] = []
@@ -118,6 +120,26 @@ export const productReducer = (state: IProduct[], action: { type: string, payloa
         case 'GET_PRODUCTS':
             return action.payload
 
+        default: return state
+    }
+}
+export const initSize: ISize[] = []
+
+export const sizeReducer = (state: ISize[], action: { type: string, payload: ISize[] }) => {
+    console.log("running size...", state)
+    switch (action.type) {
+        case 'GET_SIZES':
+            return action.payload
+        default: return state
+    }
+}
+export const initBrand: IBrand[] = []
+
+export const brandReducer = (state: IBrand[], action: { type: string, payload: IBrand[] }) => {
+    console.log("running brand...", state)
+    switch (action.type) {
+        case 'GET_BRANDS':
+            return action.payload
         default: return state
     }
 }

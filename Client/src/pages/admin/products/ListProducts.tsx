@@ -1,9 +1,10 @@
 import { Pagination, Tag } from "antd"
 import { useStoreProducts } from "../../../store/hooks"
 import { useEffect, useState } from "react"
-import { getAll, paginateProduct } from "../../../service/products.service"
+import { deleteProduct, getAll, paginateProduct } from "../../../service/products.service"
 import { IProduct, IResSize } from "../../../types/products"
 import { ISize } from "../../../types/size"
+import { Link } from "react-router-dom"
 
 const ListProducts = () => {
   const { products, dispatch } = useStoreProducts()
@@ -37,6 +38,20 @@ const ListProducts = () => {
     })
     console.log("Page hiện tại: " + page, "/Tổng page: " + totalPage);
   };
+  const onHandleRemove = (id: string) => {
+    if (window.confirm('Are you sure?')) {
+      deleteProduct(id).then(() => {
+        getAll().then(({ data }) => {
+          dispatch({
+            type: "GET_PRODUCTS",
+            payload: data.product.docs
+          })
+          setToTalPage((data.product.totalPages) * 10)
+        })
+      })
+    }
+
+  }
   return (
     <div style={{ padding: "  50px" }} >
       <table id="table-order" style={{ width: "1150px" }}>
@@ -67,8 +82,8 @@ const ListProducts = () => {
               ))}</td>
               <td>{product.categoryId.name}</td>
               <td>
-                <Tag color="green">Edit</Tag>
-                <Tag color="red">Delete</Tag>
+                <Link to={`../product/update/${product._id}`}> <Tag color="green">Edit</Tag></Link>
+                <Tag color="red" onClick={() => onHandleRemove(product._id)}>Delete</Tag>
               </td>
             </tr>
           ))}

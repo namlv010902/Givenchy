@@ -29,9 +29,9 @@ const productSchema = new mongoose.Schema({
                 type: Number,
                 required: true,
             },
-            unitsSold:{
+            unitsSold: {
                 type: Number,
-                required: true,
+                default: 0
             }
         }
     ],
@@ -47,7 +47,7 @@ const productSchema = new mongoose.Schema({
         enum: ['Man', 'Woman', 'Unisex']
 
     },
-    
+
     categoryId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,

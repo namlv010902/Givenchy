@@ -1,5 +1,9 @@
 import { instance } from "./config.service"
-
+const accessToken = JSON.parse(localStorage.getItem("accessToken")!);
+const headers: Record<string, string> = {};  //Record<keyType, valueType>.
+if (accessToken) {
+  headers["Authorization"] = `Bearer ${accessToken}`;
+}
 export const getAll = () => {
     return instance.get('product')
 }
@@ -7,10 +11,13 @@ export const getProduct = (id: string) => {
     return instance.get('product/' + id)
 }
 export const updateProduct = (id: string, data: any) => {
-    return instance.patch('product/' + id, data)
+    return instance.patch('product/' + id, data,{headers})
 }
 export const createProduct = (data: any) => {
-    return instance.post('product/', data)
+    return instance.post('product/', data,{headers})
+}
+export const deleteProduct = (id: string) => {
+    return instance.delete('product/'+id,{headers})
 }
 
 export const getProductNew = () => {

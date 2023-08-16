@@ -9,11 +9,11 @@ if (accessToken) {
 export const createOrder = (data: any) => {
     return instance.post('order/', data, { headers })
 }
-export const getUserOrder = (idUser: string) => {
-    return instance.get('orderUser/' + idUser, { headers })
+export const getUserOrder = () => {
+    return instance.get('orderUser/', { headers })
 }
-export const filterOrder = (status: string, idUser: string) => {
-    return instance.post('orderFilter/' + idUser, { status: status })
+export const filterOrder = (status: string) => {
+    return instance.post('orderFilter/' , { status: status })
 }
 export const orderDetail = (id: string) => {
     return instance.get('order/' + id, { headers })

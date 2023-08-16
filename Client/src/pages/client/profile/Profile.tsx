@@ -9,7 +9,7 @@ import ImgCrop from 'antd-img-crop';
 import type { UploadFile } from 'antd/es/upload/interface';
 import axios from 'axios';
 import { useStoreUser } from '../../../store/hooks';
-import { getUser, updateProfile } from '../../../service/auth.service';
+import { getProfile, updateProfile } from '../../../service/auth.service';
 import { Link, useNavigate } from 'react-router-dom';
 import { scrollToTop } from '../../../service/config.service';
 
@@ -19,27 +19,21 @@ const Profile = () => {
   const { user, dispatchUser } = useStoreUser()
   
   const navigate = useNavigate()
-  const userId = JSON.parse(localStorage.getItem('userId')!);
+  const accessToken = JSON.parse(localStorage.getItem('accessToken')!);
   // console.log(userId);
   useEffect(() => {
-    if (!userId) {
+    if (!accessToken) {
       navigate("/auth/login")
-    }
-  }, [])
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const { data } = await getUser(userId)
+    }else{
+      getProfile().then(({ data }) => {
         dispatchUser({
           type: "GET_PROFILE",
           payload: data.user
         })
-      } catch (error) {
-        console.log('Error fetching user:', error);
-      }
+      })
     }
-    fetchUser()
-  }, [])
+  }, [accessToken])
+  
   const { Meta } = Card;
   // console.log(props.user);
   const avatar = user?.avatar
@@ -49,7 +43,6 @@ const Profile = () => {
   }, [avatar])
   const onFinish = async (values: any) => {
     values["avatar"] = showAvatar
-    values["userId"] = userId
     console.log(values);
 
     updateProfile(values).then(() => {
@@ -116,7 +109,13 @@ const Profile = () => {
       </Col>
     </Row>
   )
-
+  const validatePhoneNumber = (_: any, value: any) => {
+    const phoneRegex = /^0\d{9}$/; // Regex để kiểm tra số điện thoại bắt đầu bằng số 0 và có tổng 10 số
+    if (value && !phoneRegex.test(value)) {
+      return Promise.reject('Please enter a valid phone number!');
+    }
+    return Promise.resolve();
+  };
 
   const editProfile = (
     <div>
@@ -171,7 +170,7 @@ const Profile = () => {
               <Form.Item
                 label="Phone"
                 name="phone"
-                rules={[{ required: true, message: 'Please input your phone!' }]}
+                rules={[{ required: true, message: 'Please input your phone!' },{ validator: validatePhoneNumber }]}
                 initialValue={user?.phone}
               >
                 <Input />

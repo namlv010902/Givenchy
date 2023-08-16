@@ -1,32 +1,34 @@
 import User from "../models/users"
-import nodemailer from "nodemailer"
+
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import bcrypt from "bcryptjs"
 import joi from "joi"
-import {schemaPassword} from "../validation/forgotPassword"
+import { schemaPassword } from "../validation/forgotPassword"
+import { transporter } from "../config/mail"
+import { validateChangePassword } from "../validation/changePassword"
 dotenv.config()
-const { EMAIL, PASSWORD } = process.env
 
 export const updateProfile = async (req, res) => {
   try {
 
-    const { email, userId } = req.body
+    const { email } = req.body
+    const userId =req.user._id
     const allUser = await User.find()
     const user = await User.findOne({ _id: userId })
-    const check =  allUser.find((item) => {
+    const emailExits = allUser.find((item) => {
       return item.email == email && user.email != email
     })
 
-    if (check) {
+    if (emailExits) {
       return res.status(401).json({
         message: "The Email was registered"
       })
-    }
-    const emailExists = await User.findByIdAndUpdate(userId, req.body, { new: true })
+    }  
+    const account = await User.findByIdAndUpdate(userId, req.body, { new: true })
     return res.status(201).json({
       message: "Update account successfully",
-      emailExists
+      account
     })
   } catch (error) {
     return res.status(400).json({
@@ -34,9 +36,9 @@ export const updateProfile = async (req, res) => {
     })
   }
 }
-export const getUser = async (req, res) => {
+export const getProfile = async (req, res) => {
   try {
-    const userId = req.params.id
+    const userId = req.user._id
     const user = await User.findById(userId)
     if (!user) {
       return res.status(401).json({
@@ -45,7 +47,7 @@ export const getUser = async (req, res) => {
     }
 
     return res.status(201).json({
-      message: "Get account successfully",
+      message: "Get profile successfully",
       user
     })
   } catch (error) {
@@ -65,15 +67,6 @@ export const sendForgotPasswordEmail = async (req, res) => {
         message: "Email not found!",
       });
     }
-    // Tạo một transporter để kết nối với tài khoản email admin
-    const transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: 'namphpmailer@gmail.com',
-        pass: 'rhlacgylyyzpiczf'
-      },
-      authMethod: 'PLAIN'
-    });
 
     // Tạo token theo email
     const token = await jwt.sign({ email: email }, 'namdeptrai', { expiresIn: '1h' });
@@ -162,18 +155,32 @@ export const forgotPassword = async (req, res) => {
 };
 export const changePassword = async (req, res) => {
   try {
-    const { newPassword } = req.body;
-    const { error } = schemaPassword.validate(req.body, { abortEarly: false })
+    console.log(req.user);
+    const { newPassword, oldPassword } = req.body;
+    const { error } = validateChangePassword.validate(req.body, { abortEarly: false })
     if (error) {
       return res.status(402).json({
         message: error.details.map(item => item.message)
+      })
+    }
+    //Kiểm tra mật khẩu cũ có đúng ko
+    const passwordExist = await bcrypt.compare(oldPassword, req.user.password);
+    if (!passwordExist) {
+      return res.status(401).json({
+        message: "Old password is incorrect"
+      })
+    }
+    //Mật khẩu mới phải khác mật khẩu cũ
+    if(newPassword == oldPassword) {
+      return res.status(403).json({
+        message: "New password must differ from old password"
       })
     }
     const hasPassword = await bcrypt.hash(newPassword, 10)
     const user = await User.findByIdAndUpdate(req.user._id, { password: hasPassword }, { new: true });
     user.password = undefined;
     return res.status(201).json({
-      message: "Updated password successfully",
+      message: "Change password successfully",
       user
     });
   } catch (error) {

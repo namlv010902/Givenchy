@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 
 const CreateProduct = () => {
   const [productName, setProductName] = useState('');
@@ -19,13 +19,13 @@ const CreateProduct = () => {
     setSizes([...sizes, { size: '', price: '' }]);
   };
 
-  const handleRemoveSize = (index) => {
+  const handleRemoveSize = (index:any) => {
     const list = [...sizes];
     list.splice(index, 1);
     setSizes(list);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event:any) => {
     event.preventDefault();
     const data={
       productName,

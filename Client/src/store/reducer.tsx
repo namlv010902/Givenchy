@@ -1,7 +1,9 @@
 import { ICart } from "../common/cart";
 import { ICate } from "../common/categories";
 import { IComment } from "../common/comment";
+import { IFavorite } from "../common/favorite";
 import { IOrder } from "../common/order";
+import { IProduct } from "../common/products";
 import { IUser } from "../common/user";
 
 export const initCart: ICart[] = []
@@ -16,8 +18,8 @@ export const cartReducer = (state: ICart[], action: { type: string, payload: ICa
         // case 'POST_CART':
         //     return [...state, {...action.payload}];
         case 'DELETE_PRODUCT_IN_CART':
-            const product = state.products.find((p:any) => p._id === action.payload)
-            const updatedProducts = state.products.filter((item:any) => item._id !== action.payload);
+            const product = state.products.find((p: any) => p._id === action.payload)
+            const updatedProducts = state.products.filter((item: any) => item._id !== action.payload);
             const updateTotalPrice = state.totalPrice - product.price * product.quantity
             return {
                 ...state,
@@ -92,6 +94,30 @@ export const categoryReducer = (state: ICate[], action: { type: string, payload:
     switch (action.type) {
         case 'GET_CATEGORIES':
             return action.payload
+        default: return state
+    }
+}
+export const initFavorite: IFavorite[] = []
+
+export const favoriteReducer = (state: IFavorite[], action: { type: string, payload: IFavorite[] }) => {
+    console.log("running favorite...", state)
+    switch (action.type) {
+        case 'GET_FAVORITES_USER':
+            return action.payload
+        // case 'UPDATE_FAVORITE_USER':
+        //     return action.payload
+        default: return state
+    }
+}
+
+export const initProducts: IProduct[] = []
+
+export const productReducer = (state: IProduct[], action: { type: string, payload: IProduct[] }) => {
+    console.log("running product...", state)
+    switch (action.type) {
+        case 'GET_PRODUCTS':
+            return action.payload
+    
         default: return state
     }
 }

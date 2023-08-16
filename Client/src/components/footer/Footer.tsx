@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import './footer.css'
 
 const Footer = () => {
@@ -9,7 +10,7 @@ const Footer = () => {
           <div className="footer-icon">
             <i className="fa fa-instagram" aria-hidden="true"></i>
             <i className="fa fa-twitter" aria-hidden="true"></i>
-            <i className="fa fa-facebook" aria-hidden="true"></i>
+         <Link to="https://www.facebook.com/profile.php?id=100064288837955" >  <i className="fa fa-facebook" aria-hidden="true"></i></Link> 
           </div>
           <div className="footer-menu">
             <p>SITEMAP CONTACT US SUPPORT CENTER DELIVERY & RETURNS FAQS</p>
@@ -21,7 +22,7 @@ const Footer = () => {
         <span>namle01092002@gmail.com</span>
         </div>
       </footer>
-       <p className='copyright'>COPYRIGHTS © 2020 SHOPILAUNCH. ALL RIGHTS RESERVED.</p>
+       <p className='copyright'>COPYRIGHTS © 2023 NAMLE. ALL RIGHTS RESERVED.</p>
       
     </div>
   )

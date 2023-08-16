@@ -1,7 +1,7 @@
 import Comment from "../models/comments";
 export const createComment =async(req, res)=>{
  try {
-    const comment = await Comment.create(req.body)
+    const comment = await Comment.create({userId: req.user._id,productId:req.body.productId, content:req.body.content})
     return res.status(200).json({
         message:"Comment created",
         comment

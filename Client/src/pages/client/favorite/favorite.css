@@ -18,5 +18,11 @@
     margin: 10px 0;
 }
 #fv-desc{
-    width: 600px;
+    width: 800px;
+}
+#removeFavorite:hover{
+  font-size: 20px;
+  color: #f12;
+  transition: 0.3s ease-in-out;
+  cursor: pointer;
 }

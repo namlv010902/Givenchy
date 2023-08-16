@@ -3,6 +3,7 @@ import { IProduct } from '../../common/products';
 import { searchProduct } from '../../service/products.service';
 import { Link } from 'react-router-dom';
 import { Popover } from 'antd';
+import { scrollToTop } from '../../service/config.service';
 const Search = () => {
     const [products, setProducts] = useState<IProduct[]>()
     const handleSearch = (value: any) => {
@@ -16,7 +17,7 @@ const Search = () => {
             {products?.map(item => {
                 return (
                     <div key={item._id} >
-                        <Link className="item-cart" to={`/product/${item._id}`}>
+                        <Link onClick={()=>scrollToTop()} className="item-cart" to={`/product/${item._id}`}>
                             <div className="image-cart">
                                 <img src={item.image} alt="" />
                             </div>
@@ -28,7 +29,7 @@ const Search = () => {
                     </div>
                 )
             })}
-            {products?.length == 0 && <p>Ko tìm thấy</p>}
+            {products?.length == 0 && <p>Not found</p>}
         </div>
     )
     return (

@@ -18,3 +18,6 @@ export const forgotPassword = (data: { newPassword: string, confirmPassword: str
         headers: { 'Authorization': 'Bearer ' + tokenEmail }
     })
 }
+export const changePassword = (data:object) => {
+    return instance.patch('changePassword', data,{ headers })
+}

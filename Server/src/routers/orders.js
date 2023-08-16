@@ -5,11 +5,11 @@ import {checkPermissionAndAuth} from "../middlewares/authorization"
 const router = express.Router()
 
 router.post("/order", authenticate, createOrder)
-router.get("/orderUser/:id", authenticate, getUserOrders)
+router.get("/orderUser/", authenticate, getUserOrders)
 router.get("/order-admin", getAdminOrders)
 router.get("/order/:id", authenticate, getOrderDetail)
 router.patch("/order/:id", checkPermissionAndAuth, updateOrder)
 router.delete("/order/:id", authenticate, cancelOrder)
-router.post("/orderFilter/:idUser", filterOrders)
+router.post("/orderFilter/",authenticate, filterOrders)
 
 export default router

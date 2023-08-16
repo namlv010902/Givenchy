@@ -7,11 +7,11 @@ import { scrollToTop } from '../../service/config.service';
 const ProductInCart = () => {
     const { cart, dispatch } = useStoreCart()
   let countProductInCart = cart?.products?.length || 0
-  const userId = JSON.parse(localStorage.getItem('userId')!);
+ const accessToken = JSON.parse(localStorage.getItem("accessToken")!)
   useEffect(() => {
     const getData = async () => {
       try {
-        const { data } = await getCart(userId)
+        const { data } = await getCart()
         dispatch({
           type: "GET_CART",
           payload: data.cart
@@ -20,12 +20,12 @@ const ProductInCart = () => {
         console.log('Error fetching cart:', error);
       }
     }
-    if (userId) {
-      getData()
-    }
+      if(accessToken){
+        getData()
+      }
   }, [])
   const handleRemove = (id: string) => {
-    removeProductInCart(id, userId);
+    removeProductInCart(id);
     dispatch({
       type: "DELETE_PRODUCT_IN_CART",
       payload: id
@@ -62,7 +62,7 @@ const ProductInCart = () => {
   return (
     <div>
    <Popover content={showCart} placement="bottom" >
-            <Link to="/cart" id='dropCart'>  <i title='Giỏ hàng của bạn' className='fa fa-shopping-basket'></i> <p>{countProductInCart}</p> </Link></Popover>
+            <Link to="/cart" onClick={()=>scrollToTop()} id='dropCart'>  <i title='Giỏ hàng của bạn' className='fa fa-shopping-basket'></i> <p>{countProductInCart}</p> </Link></Popover>
 
     </div>
   )

@@ -7,6 +7,6 @@ const router = express.Router()
 router.post("/cart", authenticate, addToCart)
 router.patch("/cart/:id", authenticate, updateCartItemQuantity)
 router.post("/cart/:id", authenticate, removeOneProductInCart)
-router.get("/cart/:id", authenticate,getCartUser)
+router.get("/cart", authenticate,getCartUser)
 
 export default router

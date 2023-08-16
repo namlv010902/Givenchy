@@ -1,39 +1,43 @@
 
-import { useEffect } from 'react'
-import { useStoreCart } from '../../../store/hooks'
+import { useEffect, useState } from 'react'
+import { useStoreCart, useStoreUser } from '../../../store/hooks'
 import './checkout.css'
 import { getCart } from '../../../service/cart.service'
 import { useForm } from "react-hook-form";
 import { createOrder } from '../../../service/order.service';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { getProfile } from '../../../service/auth.service';
 const Checkout = () => {
-  const userId = JSON.parse(localStorage.getItem('userId')!)
+  const accessToken = JSON.parse(localStorage.getItem('accessToken')!)
   const { cart, dispatch } = useStoreCart()
+  const [isLoading, setIsLoading] = useState(false)
+  const { user, dispatch: dispatchUser } = useStoreUser()
   const navigate = useNavigate()
   useEffect(() => {
+    if (!accessToken) {
+      navigate('auth/login')
+    }
     if (cart?.products?.length == 0) {
       navigate("/")
     }
-    if (!userId) {
-      navigate('auth/login')
-    }
-  }, [cart, userId])
-  useEffect(() => {
-    const fetchCart = async () => {
-      const { data } = await getCart(userId)
+    getProfile().then(({ data }) => {
+      dispatchUser({
+        type: 'GET_PROFILE',
+        data: data.user
+      })
+    })
+    getCart().then(({data})=>{
       dispatch({
         type: 'GET_CART',
         payload: data.cart
       })
-    }
-    fetchCart()
-  }, [])
-  console.log(cart);
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    })
+  }, [cart, accessToken])
+  // console.log(cart)
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = (data: any) => {
     data["cartId"] = cart._id
-    data["userId"] = userId
     Swal.fire({
       title: 'Are you sure order?',
       text: "You won't be able to revert this!",
@@ -44,48 +48,50 @@ const Checkout = () => {
       confirmButtonText: 'Oki'
     }).then((result) => {
       if (result.isConfirmed) {
+        setIsLoading(true)
         createOrder(data).then(() => {
           dispatch({
             type: 'DELETE_ALL_PRODUCTS_IN_CART'
           })
           navigate('/message')
+          return
         })
           .catch((error) => alert(error))
       }
     })
-
   };
   return (
     <div className='checkout-main'>
-      <div className="checkout">
-        <h3>Checkout</h3>
-        <form className="formCheckout" onSubmit={handleSubmit(onSubmit)}>
-          <div className="form-group">
-            <label htmlFor="">CustomerName</label> <br />
-            <input type="text" {...register("customerName", { required: true })} /> <br />
-            {errors.customerName?.type === 'required' && <span style={{ color: "#f12" }}>This is required</span>}
-          </div>
-          <div className="form-group">
-            <label htmlFor="phone">Phone</label> <br />
-            <input type="text" {...register("phone", { required: true, pattern: /^0[0-9]{9}$/ })} /> <br />
-            {errors.phone?.type === 'required' && <span style={{ color: "#f12" }}>This is required</span>}
-            {errors.phone?.type === 'pattern' && <span style={{ color: "#f12" }}>Place enter valid phone number</span>}
+      <div className="checkout" style={{ position: "relative" }}>
+        <h3>Checkout</h3> {isLoading ? <img height={100} style={{ position: "absolute", top: "100px", zIndex: "1", left: "5", right: "0" }} src="https://i.gifer.com/ZKZg.gif" /> : ""
+        } {user &&
+          <form className="formCheckout" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-group">
-              <label htmlFor="">Address</label> <br />
-              <input type="text" {...register("address", { required: true })} /> <br />
-              {errors.address?.type === 'required' && <span style={{ color: "#f12" }}>This is required</span>}
+              <label htmlFor="">CustomerName</label> <br />
+              <input defaultValue={user.name} type="text" {...register("customerName", { required: true })} /> <br />
+              {errors.customerName?.type === 'required' && <span style={{ color: "#f12" }}>This is required</span>}
             </div>
-          </div>
-          <div className="form-group">
-            <label htmlFor="">Note</label> <br />
-            <textarea  {...register("note")} />
-          </div>
-          <input type="radio" name="" id="" style={{ marginTop: "10px" }} checked /> Payment on delivery
-          <div className="form-group">
-            <button>Place order</button>
-          </div>
-
-        </form>
+            <div className="form-group">
+              <label htmlFor="phone">Phone</label> <br />
+              <input defaultValue={user.phone} type="text" {...register("phone", { required: true, pattern: /^0[0-9]{9}$/ })} /> <br />
+              {errors.phone?.type === 'required' && <span style={{ color: "#f12" }}>This is required</span>}
+              {errors.phone?.type === 'pattern' && <span style={{ color: "#f12" }}>Place enter valid phone number</span>}
+              <div className="form-group">
+                <label htmlFor="">Address</label> <br />
+                <input type="text" {...register("address", { required: true })} /> <br />
+                {errors.address?.type === 'required' && <span style={{ color: "#f12" }}>This is required</span>}
+              </div>
+            </div>
+            <div className="form-group">
+              <label htmlFor="">Note</label> <br />
+              <textarea  {...register("note")} />
+            </div>
+            <input type="radio" name="" id="" style={{ marginTop: "10px" }} checked /> Payment on delivery
+            <div className="form-group">
+              <button>Place order</button>
+            </div>
+          </form>
+        }
       </div>
       <div className="cart">
         <h4>Perfume selected</h4>
@@ -100,17 +106,14 @@ const Checkout = () => {
                 </div>
                 <div className="cart_product">
                   <p>{product.productId.name} ( {product.sizeId.name} )</p>
-
                 </div>
               </div>
               <div className="cart_product_totalPrice">
                 <p style={{ color: "#f12" }}>${sum}</p>
-
               </div>
             </div>
           )
         }
-
         )}
         <h3 id='cartTotalPrice'>TotalPrice: ${cart.totalPrice}</h3>
       </div>

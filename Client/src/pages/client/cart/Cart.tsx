@@ -11,17 +11,17 @@ import { getCart, removeProductInCart, updateCart } from '../../../service/cart.
 
 const Cart = () => {
   const navigate = useNavigate();
-  const userId = JSON.parse(localStorage.getItem('userId')!);
+  const accessToken = JSON.parse(localStorage.getItem('accessToken')!);
   const { cart, dispatch } = useStoreCart();
   // const [messageApi, contextHolder] = message.useMessage();
   useEffect(() => {
-    if (!userId) {
+    if (!accessToken) {
       navigate("/auth/login");
     }
   }, []);
 
   useEffect(() => {
-    getCart(userId)
+    getCart()
       .then(({ data }) => {
         dispatch({
           type: "GET_CART",
@@ -49,12 +49,11 @@ const Cart = () => {
     }
     const data = {
       quantity,
-      userId,
     };
 
     try {
       await updateCart(id, data);
-      const { data: updatedCartData } = await getCart(userId);
+      const { data: updatedCartData } = await getCart();
       dispatch({
         type: "GET_CART",
         payload: updatedCartData.cart
@@ -65,7 +64,7 @@ const Cart = () => {
   };
 
   const removeInCart = async (id: string) => {
-    removeProductInCart(id, userId);
+    removeProductInCart(id);
     dispatch({
       type: "DELETE_PRODUCT_IN_CART",
       payload: id

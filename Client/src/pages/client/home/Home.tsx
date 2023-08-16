@@ -1,7 +1,6 @@
 import Carousel from '../../../components/banner/banner'
 import './home.css'
-import { Link } from 'react-router-dom'
-import { scrollToTop } from '../../../service/config.service'
+
 import { useEffect, useState } from "react"
 import { getProductBest, getProductNew } from '../../../service/products.service'
 import { IProduct } from '../../../common/products'

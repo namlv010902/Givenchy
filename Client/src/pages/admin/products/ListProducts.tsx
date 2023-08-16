@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 interface IProps {
-  products: IProduct[]
+  products?: IProduct[]
 }
 const ListProducts = (props: IProps) => {
 
@@ -28,11 +28,7 @@ const ListProducts = (props: IProps) => {
       dataIndex: 'price',
       key: 'price',
     },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
-    },
+ 
     {
       title: 'Material',
       dataIndex: 'material',

@@ -2,9 +2,20 @@ import Favorite from "../models/favorites"
 
 export const createFavorite=async(req, res)=>{
     try {
-        const favorite = await Favorite.create(req.body)
+        const {productId} = req.body
+        const userId = req.user._id
+        console.log("user",userId);
+        // check nếu sản phẩm đó đã tồn tại trong mục yêu thích của user thì xóa đi
+        const existFv = await Favorite.findOne({productId, userId})
+        if(existFv){
+            await Favorite.deleteOne({productId, userId})
+            return res.status(200).json({
+                message: "Remove favorite successfully",
+            })
+        }
+        const favorite = await Favorite.create({productId:req.body.productId, userId:userId})
         return res.status(201).json({
-            message: "Create favorite successfully",
+            message: "Add favorite successfully",
             favorite
         })
     } catch (error) {
@@ -26,25 +37,7 @@ export const getFavorite=async(req, res)=>{
         })
     }
 }
-export const checkFavorite=async(req, res)=>{
-    try {
-        const {userId, productId} = req.body
-        const favorite = await Favorite.findOne({userId:userId,productId:productId})
-        if(!favorite){
-            return res.status(401).json({
-                message: "Favorite error",
-            })
-        }
-        return res.status(201).json({
-            message: "Favorite successfully",
-            favorite
-        })
-    } catch (error) {
-        return res.status(400).json({
-            message: error.message
-        })
-    }
-}
+
 export const removeFavorite=async(req, res)=>{
     try {
         const {userId, productId} = req.body
@@ -67,7 +60,8 @@ export const removeFavorite=async(req, res)=>{
 }
 export const getFavoriteUser=async(req, res)=>{
     try {
-        const favorites = await Favorite.find({userId:req.params.id}).populate("productId")
+        const userId = req.user._id
+        const favorites = await Favorite.find({userId:userId}).populate("productId")
         if(!favorites) return res.status(404).json({message:"User not found"})
         return res.status(201).json({
             message: "Get favorite successfully",

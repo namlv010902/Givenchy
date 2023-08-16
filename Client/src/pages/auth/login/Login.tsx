@@ -10,16 +10,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useEffect } from 'react';
 const Login = () => {
   const navigate = useNavigate()
-  const userId = JSON.parse(localStorage.getItem('userId')!);
+  const accessToken = JSON.parse(localStorage.getItem('accessToken')!);
   useEffect(() => {
-    if (userId) {
+    if (accessToken) {
       navigate("/")
     }
-  }, [])
+  }, [accessToken])
   const { dispatchUser } = useStoreUser()
   const onFinish = (values: any) => {
     login(values).then(({ data }) => {
-      localStorage.setItem('userId', JSON.stringify(data.user._id))
       localStorage.setItem("accessToken", JSON.stringify(data.accessToken))
       data.user.role == "admin" ? navigate("/admin") : navigate("/")
       dispatchUser({
@@ -48,15 +47,10 @@ const Login = () => {
       </div>
       <div id='formLogin'>
         <Form
-
           layout="vertical"
-
-
           initialValues={{ remember: true }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
-
-
         >
           <Form.Item
             label="Email"
@@ -66,8 +60,6 @@ const Login = () => {
           >
             <Input />
           </Form.Item>
-
-
           <Form.Item
             label="Password"
             name="password"
@@ -76,9 +68,6 @@ const Login = () => {
           >
             <Input.Password />
           </Form.Item>
-
-
-
           <Form.Item style={{ textAlign: "center" }}>
             <Button type="primary" htmlType="submit">
               Login

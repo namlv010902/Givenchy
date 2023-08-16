@@ -29,6 +29,10 @@ const productSchema = new mongoose.Schema({
                 type: Number,
                 required: true,
             },
+            unitsSold:{
+                type: Number,
+                required: true,
+            }
         }
     ],
     brandId: {

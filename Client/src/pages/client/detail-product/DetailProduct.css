@@ -1,6 +1,6 @@
 .detail-main {
     padding: 20px 100px;
-    margin-top: 80px;
+    margin-top: 100px;
 }
 .exist{
     text-align: center;
@@ -189,21 +189,28 @@
     color: #fff;
 }
 
-.addCart {
+.addCart,.cartDisabled{
     display: inline-block;
     padding: 15px 30px;
-    background-color: #c77b50;
+    background-color: #3a8d9e;
     color: #ffffff;
     font-size: 16px;
     border: none;
     border-radius: 40px;
     cursor: pointer;
     margin-top: 15px;
-    transition: background-color 0.3s ease;
+    transition: 0.3s ease-in-out;
 }
-
+.cartDisabled{
+    cursor: not-allowed;
+    background-color: #ccc;
+  
+}
 .addCart:hover {
-    background-color: #6D4848;
+    background-color: #135c6b;
+    padding: 15px 40px;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+   
 }
 
 .addCart i {

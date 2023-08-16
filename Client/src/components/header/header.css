@@ -4,11 +4,13 @@ header {
     align-items: center;
     justify-content: space-between;
     background-color: #fff;
-    border-bottom: 1px solid #ccc;
+    /* border-bottom: 1px solid #ccc; */
    position: fixed;
    z-index: 2;
    width: 100%;
    top: 0;
+   /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); */
+   box-shadow: 0 .15rem 1.75rem #21283226!important;
 }
 
 #avatar {
@@ -16,7 +18,14 @@ header {
     width: 40px;
     border-radius: 50%;
 }
+#Scroll{
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    height: 60px;
+    cursor: pointer;
 
+}
 .show-search {
     max-height: 300px;
     overflow: scroll;
@@ -80,7 +89,9 @@ header {
     padding: 0 10px;
 
 }
-
+#formSearch:hover, .action i:hover{
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
 .action {
     display: flex;
     align-items: center;
@@ -106,6 +117,7 @@ ul li {
 nav ul li a:hover {
     transition: 0.3s ease-in-out;
     color: #ff7600;
+    text-decoration: underline;
 
 }
 

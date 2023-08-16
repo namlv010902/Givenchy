@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getCategoryProducts, getProduct } from '../../../service/products.service';
 import ShowComment from '../../../components/comment/Comment';
-import { IProduct } from '../../../common/products';
+import { IProduct } from '../../../types/products';
 import './DetailProduct.css';
 import Products from '../../../components/products/Products';
 import { addToCart, getCart } from '../../../service/cart.service';
@@ -184,7 +184,7 @@ const DetailProduct = () => {
         updateFavorite(product._id).then(({ data }) => {
           messageApi.open({
             type: 'success',
-            content:data.message,
+            content: data.message,
           });
         })
 

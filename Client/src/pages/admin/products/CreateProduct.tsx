@@ -1,84 +1,94 @@
-import  { useState } from 'react';
+import React from 'react';
+import { useForm, useFieldArray, FieldValues } from 'react-hook-form';
+
+interface ProductFormData {
+  productName: string;
+  sizes: {
+    size: string;
+    price: number;
+    inStock: number;
+  }[];
+}
 
 const CreateProduct = () => {
-  const [productName, setProductName] = useState('');
-  const [sizes, setSizes] = useState([{ size: '', price: '' }]);
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ProductFormData>({
+    defaultValues: {
+      sizes: [{ size: '', price: 0, inStock: 0 }],
+    },
+  });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'sizes',
+  });
 
-  const handleInputChange = (index:number, event:any) => {
-    console.log(index, event);
-    const { name, value } = event.target;
-    console.log(name,"value: ", value);
-    let list = [...sizes];
-    list[index] = {...list[index], [name]: value};
-    console.log(list);
-    
-    setSizes(list);
-  };
-
-  const handleAddNewSize = () => {
-    setSizes([...sizes, { size: '', price: '' }]);
-  };
-
-  const handleRemoveSize = (index:any) => {
-    const list = [...sizes];
-    list.splice(index, 1);
-    setSizes(list);
-  };
-
-  const handleSubmit = (event:any) => {
-    event.preventDefault();
-    const data={
-      productName,
-      sizes
-    }
+  const onSubmit = (data: ProductFormData) => {
     console.log(data);
-    
     // Gửi dữ liệu đi hoặc xử lý dữ liệu tại đây
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="productName">Tên sản phẩm:</label>
-        <input
-          type="text"
-          id="productName"
-          name="productName"
-          value={productName}
-          onChange={(event) => setProductName(event.target.value)}
-        />
-      </div>
+    <div style={{ padding: '50px' }}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div>
+          <label htmlFor="productName">Tên sản phẩm:</label>
+          <input
+            type="text"
+            id="productName"
+            {...register('productName', { required: true })}
+          />
+          {errors.productName && <span>Tên sản phẩm là bắt buộc</span>}
+        </div>
 
-      <div>
-        <h3>Size và giá:</h3>
-        {sizes.map((size, index) => (
-          <div key={index}>
-            <input
-              type="text"
-              name="size"
-              placeholder="Kích thước"
-               value={size.size}
-              onChange={(event) => handleInputChange(index, event)}
-            />
-            <input
-              type="number"
-              name="price"
-              placeholder="Giá"
-               value={size.price}
-              onChange={(event) => handleInputChange(index, event)}
-            />
-            <button type="button" onClick={() => handleRemoveSize(index)}>
-              Xóa
-            </button>
-          </div>
-        ))}
-        <button type="button" onClick={handleAddNewSize}>
-          Thêm kích thước
-        </button>
-      </div>
+        <div>
+          <h3>Size và giá:</h3>
+          {fields.map((field, index) => (
+            <div key={field.id}>
+              <input
+                type="text"
+                {...register(`sizes.${index}.size`, { required: true })}
+                placeholder="Kích thước"
+              />
+              {errors.sizes && errors.sizes[index]?.size && (
+                <span>Kích thước là bắt buộc</span>
+              )}
 
-      <button type="submit">Thêm sản phẩm</button>
-    </form>
+              <input
+                type="number"
+                {...register(`sizes.${index}.price`, { required: true })}
+                placeholder="Giá"
+              />
+              {errors.sizes && errors.sizes[index]?.price && (
+                <span>Giá là bắt buộc</span>
+              )}
+
+              <input
+                type="number"
+                {...register(`sizes.${index}.inStock`, { required: true })}
+                placeholder="Tồn kho"
+              />
+              {errors.sizes && errors.sizes[index]?.inStock && (
+                <span>Tồn kho là bắt buộc</span>
+              )}
+
+              <button type="button" onClick={() => remove(index)}>
+                Xóa
+              </button>
+            </div>
+          ))}
+
+          <button type="button" onClick={() => append({ size: '', price: 0, inStock: 0 })}>
+            Thêm kích thước
+          </button>
+        </div>
+
+        <button type="submit">Thêm sản phẩm</button>
+      </form>
+    </div>
   );
 };
 

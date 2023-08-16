@@ -1,6 +1,6 @@
 
 import { Pagination, Select, Slider } from 'antd';
-import { IProduct } from '../../../common/products';
+import { IProduct } from '../../../types/products';
 import './products.css';
 import { useEffect, useState } from "react"
 import { ToastContainer } from 'react-toastify';
@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { getCategories } from '../../../service/categories.service';
 import Products from '../../../components/products/Products';
 import { useStoreCategory, useStoreProducts } from '../../../store/hooks';
-import { ISize } from '../../../common/size';
+import { ISize } from '../../../types/size';
 import { filterPrice, getAll, getCategoryProducts, getProductsByBrand, getProductsByGender, getProductsBySize, paginateProduct, sortProduct } from '../../../service/products.service';
 import { getBrands } from '../../../service/brand.service';
 import { getSizes } from '../../../service/size.service';
@@ -160,7 +160,7 @@ const ProductsPage = () => {
                 <button>SHOW NOW</button>
               </div>
             </div>
-            <div id='tab' style={{marginTop:"20px"}}>
+            <div id='tab' style={{ marginTop: "20px" }}>
               <div style={{ display: "flex", alignItems: "center" }}>
               </div>
               <Select

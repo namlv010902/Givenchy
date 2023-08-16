@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { IProduct, IResSize } from "../../common/products"
+import { IProduct, IResSize } from "../../types/products"
 import { scrollToTop } from "../../service/config.service"
 import { useState } from "react"
 import { addToCart, getCart } from "../../service/cart.service"
@@ -15,7 +15,7 @@ const Products = (props: IProps) => {
   const [inStock, setInStock] = useState(1)
   const [price, setPrice] = useState(props.product.sizes[0].price)
   const accessToken = JSON.parse(localStorage.getItem("accessToken")!)
-  const {cart, dispatch } = useStoreCart()
+  const { cart, dispatch } = useStoreCart()
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const showModal = () => {
@@ -37,7 +37,7 @@ const Products = (props: IProps) => {
       });
       return
     }
-   
+
     if (!sizeId) {
       messageApi.open({
         type: 'error',
@@ -54,7 +54,7 @@ const Products = (props: IProps) => {
       return
     }
     // lấy ra số lượng tồn kho ban đầu
-    const productCurrent = props.product.sizes.find((item:IResSize)=>item.sizeId._id === sizeId)
+    const productCurrent = props.product.sizes.find((item: IResSize) => item.sizeId._id === sizeId)
     getCart().then(({ data }) => {
       dispatch({
         type: "GET_CART",
@@ -62,23 +62,23 @@ const Products = (props: IProps) => {
       });
     })
     // sản phẩm trong giỏ hàng
-  if(cart.products){
-    const productExistInCart = cart.products.find((item: any) => item.productId._id == props.product?._id && item.sizeId._id )
-    if (productExistInCart) { 
-      if(productCurrent){
-        if (productExistInCart.quantity >= productCurrent?.inStock) {
-          messageApi.open({
-            type: 'error',
-            content: 'Maximum quantity reached. You cannot add more items to your cart!',
-          });
-          return
+    if (cart.products) {
+      const productExistInCart = cart.products.find((item: any) => item.productId._id == props.product?._id && item.sizeId._id)
+      if (productExistInCart) {
+        if (productCurrent) {
+          if (productExistInCart.quantity >= productCurrent?.inStock) {
+            messageApi.open({
+              type: 'error',
+              content: 'Maximum quantity reached. You cannot add more items to your cart!',
+            });
+            return
+          }
         }
       }
     }
-  }
-   
+
     const data = {
-    
+
       sizeId,
       productId,
       price,

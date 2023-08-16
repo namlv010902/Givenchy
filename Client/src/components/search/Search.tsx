@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { IProduct } from '../../common/products';
+import { IProduct } from '../../types/products';
 import { searchProduct } from '../../service/products.service';
 import { Link } from 'react-router-dom';
 import { Popover } from 'antd';
@@ -17,7 +17,7 @@ const Search = () => {
             {products?.map(item => {
                 return (
                     <div key={item._id} >
-                        <Link onClick={()=>scrollToTop()} className="item-cart" to={`/product/${item._id}`}>
+                        <Link onClick={() => scrollToTop()} className="item-cart" to={`/product/${item._id}`}>
                             <div className="image-cart">
                                 <img src={item.image} alt="" />
                             </div>

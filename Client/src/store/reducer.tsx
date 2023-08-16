@@ -1,10 +1,10 @@
-import { ICart } from "../common/cart";
-import { ICate } from "../common/categories";
-import { IComment } from "../common/comment";
-import { IFavorite } from "../common/favorite";
-import { IOrder } from "../common/order";
-import { IProduct } from "../common/products";
-import { IUser } from "../common/user";
+import { ICart } from "../types/cart";
+import { ICate } from "../types/categories";
+import { IComment } from "../types/comment";
+import { IFavorite } from "../types/favorite";
+import { IOrder } from "../types/order";
+import { IProduct } from "../types/products";
+import { IUser } from "../types/user";
 
 export const initCart: ICart[] = []
 
@@ -117,7 +117,7 @@ export const productReducer = (state: IProduct[], action: { type: string, payloa
     switch (action.type) {
         case 'GET_PRODUCTS':
             return action.payload
-    
+
         default: return state
     }
 }

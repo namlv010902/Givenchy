@@ -1,63 +1,88 @@
-import { Button, Space, Table, Tag } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-import { IProduct } from '../../../common/products';
-import { Link, useParams } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'
-interface IProps {
-  products?: IProduct[]
-}
-const ListProducts = (props: IProps) => {
+import { Pagination, Tag } from "antd"
+import { useStoreProducts } from "../../../store/hooks"
+import { useEffect, useState } from "react"
+import { getAll, paginateProduct } from "../../../service/products.service"
+import { IProduct, IResSize } from "../../../types/products"
+import { ISize } from "../../../types/size"
 
-  const columns: ColumnsType<IProduct[]> = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: 'Image',
-      dataIndex: 'image',
-      key: 'image',
-      render: (imageUrl: string) => <img src={imageUrl} alt="Product" width="150" />,
-
-    },
-    {
-      title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
-    },
- 
-    {
-      title: 'Material',
-      dataIndex: 'material',
-      key: 'material',
-    },
-    {
-      title: 'Category',
-      dataIndex: 'categoryId',
-      key: 'categoryId',
-      render: (category: any) => <p>{category?.name}</p>
-
-    },
-
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <Button> <Link to={`/admin/product/update/${record?._id}`}> Update</Link></Button>
-          <Button>Delete</Button>
-        </Space>
-      ),
-    },
-  ];
-
+const ListProducts = () => {
+  const { products, dispatch } = useStoreProducts()
+  const [totalPage, setToTalPage] = useState(0)
+  useEffect(() => {
+    getAll().then(({ data }) => {
+      dispatch({
+        type: "GET_PRODUCTS",
+        payload: data.product.docs
+      })
+      setToTalPage((data.product.totalPages) * 10)
+    })
+  }, [])
+  const handlePageChange = (page: any) => {
+    // if (resetPage) {
+    //   paginateCategoryProducts(idCate, page).then(({ data }) => {
+    //     console.log(data.products);
+    //     setToTalPage((data.products.totalPages) * 10)
+    //     setProducts(data.products.docs)
+    //   })
+    //   console.log("Page hiện tại: " + page, "/Tổng page: " + totalPage);
+    //   return
+    // }
+    paginateProduct(page).then(({ data }) => {
+      console.log(data);
+      setToTalPage((data.product.totalPages) * 10)
+      dispatch({
+        type: 'GET_PRODUCTS',
+        payload: data.product.docs
+      })
+    })
+    console.log("Page hiện tại: " + page, "/Tổng page: " + totalPage);
+  };
   return (
-    <div  >
-      <ToastContainer></ToastContainer>
-      <Table columns={columns} dataSource={props.products} />
+    <div style={{ padding: "  50px" }} >
+      <table id="table-order" style={{ width: "1150px" }}>
+        <thead>
+          <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Price</th>
+            <th>Brand</th>
+            <th>Capacity</th>
+            <th>Category</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map((product: IProduct, index: number) => (
+            <tr>
+              <td>{index + 1}</td>
+              <td>{product._id}</td>
+              <td>{product.name}</td>
+              <td><img src={product.image} alt="" /></td>
+              <td>${product.sizes[0].price}</td>
+              <td>{product.brandId.name}</td>
+              <td>{product.sizes.map((item: IResSize) => (
+                <p>{item.sizeId.name},</p>
+              ))}</td>
+              <td>{product.categoryId.name}</td>
+              <td>
+                <Tag color="green">Edit</Tag>
+                <Tag color="red">Delete</Tag>
+              </td>
+            </tr>
+          ))}
+
+        </tbody>
+
+
+      </table>
+      <div id='page' style={{ marginTop: "30px" }}>
+        <Pagination style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+          defaultCurrent={1} total={totalPage}
+          onChange={(e) => handlePageChange(e)
+          } />
+      </div>
     </div>
   )
 }

@@ -3,7 +3,7 @@ import './home.css'
 
 import { useEffect, useState } from "react"
 import { getProductBest, getProductNew } from '../../../service/products.service'
-import { IProduct } from '../../../common/products'
+import { IProduct } from '../../../types/products'
 import Products from '../../../components/products/Products'
 
 const Home = () => {

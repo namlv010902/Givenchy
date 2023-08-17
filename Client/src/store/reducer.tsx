@@ -56,6 +56,8 @@ export const orderReducer = (state: IOrder[], action: { type: string, payload: I
     console.log("running orders...", state)
 
     switch (action.type) {
+        case 'GET_ORDERS':
+            return action.payload
         case 'USER_GET_ORDERS':
             return action.payload
         case 'USER_FILTER_ORDERS':
@@ -64,7 +66,7 @@ export const orderReducer = (state: IOrder[], action: { type: string, payload: I
             const { userId, status } = action.payload;
             const filteredOrders = initState.filter(item => item.userId === userId && item.status === status);
             return filteredOrders;
-
+        
         // case 'USER_CANCEL_ORDER':
         //     return action.payload
         // case 'POST_ORDER':

@@ -77,7 +77,7 @@ export const router = createBrowserRouter([
       { path: '/admin/order/update/:id', element: <UpdateOrder /> },
       { path: '/admin/comments', element: <ListComments /> },
       { path: '/admin/users', element: <ListUsers /> },
-      { path: '/admin/size', element: <ListSizes /> },
+      { path: '/admin/sizes', element: <ListSizes /> },
       { path: '/admin/size/add', element: <CreateSize /> },
       { path: '/admin/size/update/:id', element: <UpdateSize /> },
       { path: '/admin/brands', element: <ListBrands /> },

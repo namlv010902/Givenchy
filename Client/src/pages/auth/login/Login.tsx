@@ -25,8 +25,6 @@ const Login = () => {
         type: 'GET_PROFILE',
         payload: data.user
       })
-
-
     })
     .catch(({response})=>toast.error(response.data.message))
   };

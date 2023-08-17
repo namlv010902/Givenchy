@@ -1,61 +1,11 @@
 import { Pagination, Tag } from "antd"
-import { useStoreProducts } from "../../../store/hooks"
-import { useEffect, useState } from "react"
-import { deleteProduct, getAll, paginateProduct } from "../../../service/products.service"
+
 import { IProduct, IResSize } from "../../../types/products"
-import { ISize } from "../../../types/size"
 import { Link } from "react-router-dom"
+import { useProducts } from "../../../hooks/useProducts"
 
 const ListProducts = () => {
-  const { products, dispatch } = useStoreProducts()
-  const [totalPage, setToTalPage] = useState(0)
-  useEffect(() => {
-    getAll().then(({ data }) => {
-      dispatch({
-        type: "GET_PRODUCTS",
-        payload: data.product.docs
-      })
-      setToTalPage((data.product.totalPages) * 10)
-    })
-  }, [])
-  const handlePageChange = (page: any) => {
-    // if (resetPage) {
-    //   paginateCategoryProducts(idCate, page).then(({ data }) => {
-    //     console.log(data.products);
-    //     setToTalPage((data.products.totalPages) * 10)
-    //     setProducts(data.products.docs)
-    //   })
-    //   console.log("Page hiện tại: " + page, "/Tổng page: " + totalPage);
-    //   return
-    // }
-    paginateProduct(page).then(({ data }) => {
-      console.log(data);
-      setToTalPage((data.product.totalPages) * 10)
-      dispatch({
-        type: 'GET_PRODUCTS',
-        payload: data.product.docs
-      })
-    })
-    console.log("Page hiện tại: " + page, "/Tổng page: " + totalPage);
-  };
-  const onHandleRemove = (id: string) => {
-    if (window.confirm('Are you sure?')) {
-      deleteProduct(id).then(() => {
-        getAll().then(({ data }) => {
-          dispatch({
-            type: "GET_PRODUCTS",
-            payload: data.product.docs
-          })
-          setToTalPage((data.product.totalPages) * 10)
-          alert(data.message)
-        })
-        .catch(({response})=>{
-          alert(response.data.message)
-      })
-      })
-    }
-
-  }
+ const {products, totalPage, onHandleRemove, handlePageChange} = useProducts()
   return (
     <div style={{ padding: "  50px" }} >
       <table id="table-order" style={{ width: "1150px" }}>

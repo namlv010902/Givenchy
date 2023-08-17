@@ -1,7 +1,10 @@
 
+import { IOrder } from "../types/order"
 import { getAuthorizationHeaders, instance } from "./config.service"
 const headers = getAuthorizationHeaders()
-
+export const ADgetOrders = () => {
+    return instance.get('order-admin/')
+}
 export const createOrder = (data: any) => {
     return instance.post('order/', data, { headers })
 }
@@ -23,7 +26,7 @@ export const resetOrder = (id: string) => {
 export const getOrders = () => {
     return instance.get('order/')
 }
-export const ADUpdateOrder = (id:string) => {
-    return instance.patch('order/'+id,{headers})
+export const ADUpdateOrder = (id:string,data:IOrder) => {
+    return instance.patch('order/'+id,data,{headers})
 }
 

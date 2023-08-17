@@ -1,40 +1,11 @@
-import { Link } from "react-router-dom"
-import { useEffect, useState } from "react"
-import { deleteUser, getUsers, updateRole } from "../../../service/users.service"
 import { IUser } from "../../../types/user"
 import { Tag } from "antd"
+import { useUser } from "../../../hooks/useUsers"
 
 const ListUsers = () => {
-    const [user, setUser] = useState<IUser[]>()
-    useEffect(() => {
-        getUsers().then(({ data }) => {
-            setUser(data.users)
-        })
-    }, [])
-    console.log(user);
-    const handleUpdateRole = (id: string, role: string) => {
-        console.log(role);
-        updateRole(id, { role }).then(({ data }) => {
-            getUsers().then(({ data }) => {
-                setUser(data.users)
-            })
-            alert(data.message)
-        })
-            .catch(({ response }) => {
-                alert(response.data.message)
-            })
-    }
-    const handleRemove = (id: string) => {
-        if (window.confirm('Are you sure you want to remove')) {
-            deleteUser(id).then(() => {
-                getUsers().then(({ data }) => {
-                    setUser(data.users)
-                })
-            })
-        }
-    }
+    const {user, handleRemove, handleUpdateRole} =useUser()
     return (
-        <div style={{ padding: "  50px" }} >
+        <div style={{ padding: "50px" }} >
             <table id="table-order" style={{ width: "1150px" }}>
                 <thead>
                     <tr>

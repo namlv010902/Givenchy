@@ -1,10 +1,6 @@
 
-import { instance } from "./config.service"
-const accessToken = JSON.parse(localStorage.getItem("accessToken")!);
-const headers: Record<string, string> = {};  //Record<keyType, valueType>.
-if (accessToken) {
-  headers["Authorization"] = `Bearer ${accessToken}`;
-}
+import { getAuthorizationHeaders, instance } from "./config.service"
+const headers = getAuthorizationHeaders()
 
 export const sendMailer = (email: string) => {
     return instance.post('email', { email: email })
@@ -20,4 +16,13 @@ export const forgotPassword = (data: { newPassword: string, confirmPassword: str
 }
 export const changePassword = (data:object) => {
     return instance.patch('changePassword', data,{ headers })
+}
+export const getUsers = () => {
+    return instance.get('users')
+}
+export const updateRole = (id:string,data:{role:string}) => {
+    return instance.patch('users/'+id,data,{headers})
+}
+export const deleteUser = (id:string) => {
+    return instance.delete('users/'+id,{headers})
 }

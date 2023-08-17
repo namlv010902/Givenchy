@@ -1,4 +1,3 @@
-
 import { createBrowserRouter } from "react-router-dom";
 import Home from "../pages/client/home/Home";
 import ProductsPage from "../pages/client/productsPage/ProductsPage";
@@ -24,6 +23,19 @@ import ListProducts from "../pages/admin/products/ListProducts";
 import CreateProduct from "../pages/admin/products/CreateProduct";
 import UpdateProduct from "../pages/admin/products/UpdateProduct";
 import Layout from "../layout/Layout";
+import ListCategories from "../pages/admin/categories/ListCategories";
+import CreateCategory from "../pages/admin/categories/CreateCategory";
+import ListOrders from "../pages/admin/orders/ListOrders";
+import UpdateOrder from "../pages/admin/orders/UpdateOrder";
+import ListComments from "../pages/admin/comment/ListComments";
+import ListUsers from "../pages/admin/users/ListUsers";
+import ListSizes from "../pages/admin/Size(capacity)/ListSizes";
+import CreateSize from "../pages/admin/Size(capacity)/CreateSize";
+import UpdateSize from "../pages/admin/Size(capacity)/UpdateSize";
+import ListBrands from "../pages/admin/brands/ListBrands";
+import UpdateBrand from "../pages/admin/brands/UpdateBrand";
+import CreateBrand from "../pages/admin/brands/CreateBrand";
+import UpdateCategory from "../pages/admin/categories/UpdateCategory";
 
 export const router = createBrowserRouter([
   {
@@ -58,6 +70,19 @@ export const router = createBrowserRouter([
       { path: '/admin/products', element: <ListProducts /> },
       { path: '/admin/product/add', element: <CreateProduct /> },
       { path: '/admin/product/update/:id', element: <UpdateProduct /> },
+      { path: '/admin/categories', element: <ListCategories /> },
+      { path: '/admin/category/update/:id', element: <UpdateCategory /> },
+      { path: '/admin/category/add', element: <CreateCategory /> },
+      { path: '/admin/orders', element: <ListOrders /> },
+      { path: '/admin/order/update/:id', element: <UpdateOrder /> },
+      { path: '/admin/comments', element: <ListComments /> },
+      { path: '/admin/users', element: <ListUsers /> },
+      { path: '/admin/size', element: <ListSizes /> },
+      { path: '/admin/size/add', element: <CreateSize /> },
+      { path: '/admin/size/update/:id', element: <UpdateSize /> },
+      { path: '/admin/brands', element: <ListBrands /> },
+      { path: '/admin/brand/update/:id', element: <UpdateBrand /> },
+      { path: '/admin/brand/add', element: <CreateBrand /> },
     ],
   },
 ]);

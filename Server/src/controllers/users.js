@@ -8,12 +8,56 @@ import { schemaPassword } from "../validation/forgotPassword"
 import { transporter } from "../config/mail"
 import { validateChangePassword } from "../validation/changePassword"
 dotenv.config()
-
+export const getUsers = async (req, res) => {
+  try {
+    const users = await User.find()
+    return res.status(201).json({
+      message: "Get users successfully",
+      users
+    })
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+    })
+  }
+}
+export const updateRole = async (req, res) => {
+  try {
+    const users = await User.findByIdAndUpdate(req.params.id, { role: req.body.role }, { new: true })
+    return res.status(201).json({
+      message: "Update role successfully",
+      users
+    })
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+    })
+  }
+}
+export const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+    if (user.role === 'admin') {
+      return res.status(403).json({
+        message: "Unauthorized",
+      })
+    }
+    const users = await User.findByIdAndRemove(req.params.id, { new: true })
+    return res.status(201).json({
+      message: "Delete user successfully",
+      users
+    })
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message,
+    })
+  }
+}
 export const updateProfile = async (req, res) => {
   try {
 
     const { email } = req.body
-    const userId =req.user._id
+    const userId = req.user._id
     const allUser = await User.find()
     const user = await User.findOne({ _id: userId })
     const emailExits = allUser.find((item) => {
@@ -24,7 +68,7 @@ export const updateProfile = async (req, res) => {
       return res.status(401).json({
         message: "The Email was registered"
       })
-    }  
+    }
     const account = await User.findByIdAndUpdate(userId, req.body, { new: true })
     return res.status(201).json({
       message: "Update account successfully",
@@ -171,7 +215,7 @@ export const changePassword = async (req, res) => {
       })
     }
     //Mật khẩu mới phải khác mật khẩu cũ
-    if(newPassword == oldPassword) {
+    if (newPassword == oldPassword) {
       return res.status(403).json({
         message: "New password must differ from old password"
       })

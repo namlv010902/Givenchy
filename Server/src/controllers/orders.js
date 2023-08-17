@@ -40,6 +40,13 @@ export const createOrder = async (req, res) => {
     await order.populate("products.productId")
     await order.populate("products.sizeId")
     const user = await User.findById(userId);
+    // thêm idOrder vào bảng user
+    await User.findByIdAndUpdate(userId,{
+      $push:{
+        orderId:order._id
+      }
+    })
+
     const productInOrder = order.products;
     var checkTime = new Date(order.createdAt);
     var outTime = checkTime.toLocaleString();

@@ -4,5 +4,9 @@ export interface IUser{
     avatar:string,
     phone:string,
     email:string,
+    role:string,
+    orderId:[{
+        _id:string
+    }]
     
 }

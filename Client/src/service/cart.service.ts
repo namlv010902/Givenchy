@@ -1,10 +1,6 @@
-import { instance } from "./config.service"
+import { getAuthorizationHeaders, instance } from "./config.service"
 
-const accessToken = JSON.parse(localStorage.getItem("accessToken")!);
-const headers: Record<string, string> = {};  //Record<keyType, valueType>.
-if (accessToken) {
-  headers["Authorization"] = `Bearer ${accessToken}`;
-}
+const headers = getAuthorizationHeaders()
 
 export const addToCart = (data: any) => {
   return instance.post('cart/', data, { headers });

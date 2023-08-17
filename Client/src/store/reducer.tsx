@@ -31,7 +31,7 @@ export const cartReducer = (state: ICart[], action: { type: string, payload: ICa
             }
         case 'DELETE_ALL_PRODUCTS_IN_CART':
 
-            return state.products ? state.products = [] : state
+            return state?.products ? state.products = [] : state
         default: return state
     }
 }
@@ -77,9 +77,11 @@ export const orderReducer = (state: IOrder[], action: { type: string, payload: I
 export const initUser: IUser[] = []
 
 export const userReducer = (state: IUser[], action: { type: string, payload: IUser[] }) => {
-    // console.log("running IUser...", state)
+     console.log("running IUser...", state)
 
     switch (action.type) {
+        case 'GET_USERS':
+            return action.payload
         case 'GET_PROFILE':
             return action.payload
         case 'UPDATE_PROFILE':

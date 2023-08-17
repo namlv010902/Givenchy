@@ -1,10 +1,6 @@
 
-import { instance } from "./config.service"
-const accessToken = JSON.parse(localStorage.getItem("accessToken")!);
-const headers: Record<string, string> = {};  //Record<keyType, valueType>.
-if (accessToken) {
-  headers["Authorization"] = `Bearer ${accessToken}`;
-}
+import { getAuthorizationHeaders, instance } from "./config.service"
+const headers = getAuthorizationHeaders()
 
 export const createOrder = (data: any) => {
     return instance.post('order/', data, { headers })
@@ -24,3 +20,10 @@ export const cancelOrder = (id: string) => {
 export const resetOrder = (id: string) => {
     return instance.post('order/' + id)
 }
+export const getOrders = () => {
+    return instance.get('order/')
+}
+export const ADUpdateOrder = (id:string) => {
+    return instance.patch('order/'+id,{headers})
+}
+

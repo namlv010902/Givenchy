@@ -1,10 +1,5 @@
-import { instance } from "./config.service"
-const accessToken = JSON.parse(localStorage.getItem("accessToken")!);
-const headers: Record<string, string> = {};  //Record<keyType, valueType>.
-if (accessToken) {
-    headers["Authorization"] = `Bearer ${accessToken}`;
-}
-
+import { getAuthorizationHeaders, instance } from "./config.service"
+const headers = getAuthorizationHeaders()
 export const register = (data: any) => {
     return instance.post('auth/register', data)
 }

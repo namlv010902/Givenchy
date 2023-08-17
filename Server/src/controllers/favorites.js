@@ -38,26 +38,7 @@ export const getFavorite=async(req, res)=>{
     }
 }
 
-export const removeFavorite=async(req, res)=>{
-    try {
-        const {userId, productId} = req.body
-        const favorite = await Favorite.findOneAndDelete({userId:userId,productId:productId})
-        if(!favorite){
-            return res.status(401).json({
-                message: "Remove favorite failed",
-                favorite
-            })
-        }
-        return res.status(201).json({
-            message: "Remove favorite successfully",
-            favorite
-        })
-    } catch (error) {
-        return res.status(400).json({
-            message: error.message
-        })
-    }
-}
+
 export const getFavoriteUser=async(req, res)=>{
     try {
         const userId = req.user._id

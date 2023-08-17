@@ -1,5 +1,5 @@
-import { instance } from "./config.service"
-
+import { getAuthorizationHeaders, instance } from "./config.service"
+const headers = getAuthorizationHeaders()
 export const getSizes=()=>{
     return instance.get("size")
 }

@@ -47,7 +47,11 @@ const ListProducts = () => {
             payload: data.product.docs
           })
           setToTalPage((data.product.totalPages) * 10)
+          alert(data.message)
         })
+        .catch(({response})=>{
+          alert(response.data.message)
+      })
       })
     }
 

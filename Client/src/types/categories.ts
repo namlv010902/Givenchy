@@ -5,6 +5,6 @@ export interface ICate{
     name:string;
     icon:string;
     banner:string;  
-    productId:IProduct[]
+    productId:[]
 
 }

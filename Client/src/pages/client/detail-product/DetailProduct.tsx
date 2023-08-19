@@ -8,29 +8,24 @@ import ShowComment from '../../../components/comment/Comment';
 import { IProduct } from '../../../types/products';
 import './DetailProduct.css';
 import Products from '../../../components/products/Products';
-import { addToCart, getCart } from '../../../service/cart.service';
-import { useStoreCart } from '../../../store/hooks';
+// import { addToCart, getCart } from '../../../service/cart.service';
+// import { useStoreCart } from '../../../store/hooks';
 import { message } from 'antd';
 import { updateFavorite } from '../../../service/favorite.service';
 import { useCart } from '../../../hooks/useCart';
-
 const DetailProduct = () => {
   const [show, setShow] = React.useState(false)
   const [product, setProduct] = useState<IProduct>()
   const [relatedProducts, setRelatedProducts] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [quantity, setQuantity] = useState(1)
-  const [errSize, setErrSize] = useState(false)
   const [price, setPrice] = useState(0)
   const [inStock, setInStock] = useState(0)
   const [unitsSold, setUnitsSold] = useState(0)
   const [sizeId, setSizeId] = useState("")
   const [messageApi, contextHolder] = message.useMessage();
-  const { cart, dispatch } = useStoreCart()
-  // console.log(relatedProducts);
-  const hook = useCart()
-  console.log(hook);
   const { id } = useParams()
+  const { handleAddCart } = useCart()
   const accessToken = JSON.parse(localStorage.getItem("accessToken")!);
   useEffect(() => {
     if (id) {
@@ -69,72 +64,6 @@ const DetailProduct = () => {
       </div>
     )
   }
-  const handleAddCart = () => {
-    if (!accessToken) {
-      messageApi.open({
-        type: 'error',
-        content: 'Please log in!',
-      });
-      return
-    }
-    //kiểm tra trường hợp nếu trong giỏ của user đã tồn tại sản phẩm đó tiếp tục thêm vượt quá tồn kho
-    getCart().then(({ data }) => {
-      dispatch({
-        type: "GET_CART",
-        payload: data.cart
-      });
-    })
-    if (cart?.products) {
-      const productExist = cart.products.find((item: any) => item.productId._id == product?._id && item.sizeId._id == sizeId)
-      if (productExist) {
-        if (quantity > (inStock - productExist.quantity)) {
-          messageApi.open({
-            type: 'error',
-            content: 'Maximum quantity reached. You cannot add more items to your cart!',
-          });
-          return
-        }
-      }
-    }
-
-    // check trường hợp người dùng cố tình xóa số lượng hoặ để số lượng về 0 rồi add cart
-    if (!quantity || quantity == 0) {
-      messageApi.open({
-        type: 'error',
-        content: 'Please check the quantity !',
-      });
-      return
-    }
-    // nếu đã chọn size thì mới cho add cart
-    if (sizeId) {
-      setErrSize(false)
-      const data = {
-        productId: id,
-        price,
-        quantity,
-        sizeId,
-
-      }
-      // console.log(data);
-      addToCart(data).then(() => {
-        getCart().then(({ data }) => {
-          dispatch({
-            type: "GET_CART",
-            payload: data.cart
-          });
-        });
-        messageApi.open({
-          type: 'success',
-          content: 'Add to Cart successfully',
-        });
-      })
-        .catch(({ response }) => {
-          alert(response.data.message);
-        })
-    } else {
-      setErrSize(true)
-    }
-  }
   // update lại số lượng khi click nút - +
   const updateQuantity = (value: any) => {
     if (value == "increase") {
@@ -154,7 +83,6 @@ const DetailProduct = () => {
   }
   // reset lại giá, số lượng tồn kho, số lượng đã bán khi chọn size
   const resetDetail = (id: string) => {
-    setErrSize(false)
     const info = product?.sizes?.find((item: any) => item.sizeId._id == id)
     setSizeId(id)
     if (info) {
@@ -173,6 +101,17 @@ const DetailProduct = () => {
     }
     setQuantity(parseInt(quantity))
   }
+  // add to cart
+  const onAddCart=()=>{
+    handleAddCart({
+      product,
+      productId: id,
+      quantity,
+      price,
+      sizeId,
+      inStock
+    })
+  }
   //Thêm sản phẩm vào yêu thích
   const addFavorite = () => {
     if (!accessToken) {
@@ -190,7 +129,6 @@ const DetailProduct = () => {
             content: data.message,
           });
         })
-
       }
     } catch (error) {
       alert(error)
@@ -229,7 +167,6 @@ const DetailProduct = () => {
                     {product?.sizes?.map((item: any, index: number) => (
                       <button className={sizeId == item.sizeId._id ? "btn-sizeFocus" : "btn-size"} key={index} onClick={() => resetDetail(item?.sizeId._id)}>{item?.sizeId?.name}</button>
                     ))}</p>
-                  {errSize && <span style={{ color: "#f12" }}>Please choose a size(ml) </span>}
                   <div style={{ display: "flex", justifyContent: "space-between", paddingRight: "150px" }}>
                     <p>InStock
                       <span> {inStock}</span>
@@ -241,7 +178,7 @@ const DetailProduct = () => {
                   <p id='quantity' >Quantity  <div id='form-add-cart'>
                     <p onClick={() => updateQuantity("decrease")}>-</p><input type="number" min={1} max={inStock} value={quantity} onChange={(e) => handleChangeQuantity(e.target.value)} /> <p onClick={() => updateQuantity("increase")} >+</p>
                   </div> </p>
-                  <button disabled={inStock == 0} onClick={() => handleAddCart()} className={inStock > 0 ? 'addCart' : 'cartDisabled'}><i className="fa fa-cart-plus" aria-hidden="true"></i>ADD TO CART</button>
+                  <button disabled={inStock == 0} onClick={() =>onAddCart()} className={inStock > 0 ? 'addCart' : 'cartDisabled'}><i className="fa fa-cart-plus" aria-hidden="true"></i>ADD TO CART</button>
                 </div>
               </div>
               <div className="desc" >

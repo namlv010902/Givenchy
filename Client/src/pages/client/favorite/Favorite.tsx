@@ -1,35 +1,21 @@
 import { Link, useNavigate } from "react-router-dom"
 import './favorite.css'
 import { useEffect } from "react"
-import { useStoreFavorite } from "../../../store/hooks"
-import { getFavoriteUser, updateFavorite } from "../../../service/favorite.service"
+import useFavorite from "../../../hooks/useFavorite"
 
 const Favorite = () => {
   const navigate = useNavigate()
+  const {addOrRemoveFavorite,favorites} = useFavorite()
   const accessToken = JSON.parse(localStorage.getItem('accessToken')!);
-  const {favorites, dispatch} = useStoreFavorite()
+ 
   useEffect(() => {
     if (!accessToken) {
       navigate("/auth/login")
-    }else{
-      getFavoriteUser().then(({data})=>{
-        dispatch({
-          type:'GET_FAVORITES_USER',
-          payload:data.favorites,
-        })
-      })
     }
   }, [accessToken])
+  
   const handUpdateFavorite =(id:string)=>{
-  updateFavorite(id).then(()=>{
-    getFavoriteUser().then(({data})=>{
-      dispatch({
-        type:'GET_FAVORITES_USER',
-        payload:data.favorites,
-      })
-    })
-
-  })
+    addOrRemoveFavorite(id)
   }
   return (
     <div className="main-favorite">

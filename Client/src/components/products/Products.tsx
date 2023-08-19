@@ -2,12 +2,10 @@ import { Link } from "react-router-dom"
 import { IProduct, IResSize } from "../../types/products"
 import { scrollToTop } from "../../service/config.service"
 import { useState } from "react"
-import { addToCart, getCart } from "../../service/cart.service"
-import { useStoreCart } from "../../store/hooks"
-import { ToastContainer, toast } from "react-toastify"
+import { ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
-import { Modal, message } from 'antd';
-import { ICart } from "../../types/cart"
+import { Modal } from 'antd';
+import { useCart } from "../../hooks/useCart"
 interface IProps {
   product: IProduct,
 }
@@ -15,10 +13,8 @@ const Products = (props: IProps) => {
   const [sizeId, setSizeId] = useState("")
   const [inStock, setInStock] = useState(1)
   const [price, setPrice] = useState(props.product.sizes[0].price)
-  const accessToken = JSON.parse(localStorage.getItem("accessToken")!)
-  const { cart, dispatch } = useStoreCart()
+  const { handleAddCart } = useCart()
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [messageApi, contextHolder] = message.useMessage();
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -28,73 +24,17 @@ const Products = (props: IProps) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const handleAddToCart = (productId: string) => {
-    if (!accessToken) {
-      messageApi.open({
-        type: 'error',
-        content: 'Please log in!',
-      });
-      return
-    }
-    if (!sizeId) {
-      messageApi.open({
-        type: 'error',
-        content: 'Please provide a size (ml)',
-      });
-      return
-    }
-    // nếu hết hàng trong kho
-    if (inStock == 0) {
-      messageApi.open({
-        type: 'error',
-        content: 'Temporarily out of stock',
-      });
-      return
-    }
-    // lấy ra số lượng tồn kho ban đầu
-    const productCurrent = props.product.sizes.find((item: IResSize) => item.sizeId._id === sizeId)
-    getCart().then(({ data }) => {
-      dispatch({
-        type: "GET_CART",
-        payload: data.cart
-      });
-    })
-    // sản phẩm trong giỏ hàng
-    if (cart?.products) {
-      const productExistInCart = cart.products.find((item: ICart) => item.productId._id == props.product?._id && item.sizeId._id)
-      if (productExistInCart) {
-        if (productCurrent) {
-          if (productExistInCart.quantity >= productCurrent?.inStock) {
-            messageApi.open({
-              type: 'error',
-              content: 'Maximum quantity reached. You cannot add more items to your cart!',
-            });
-            return
-          }
-        }
-      }
-    }
+  const handleAddToCart = () => {
     const data = {
-      sizeId,
-      productId,
+      product: props.product,
+      productId: props.product._id,
+      quantity: 1,
       price,
-      quantity: 1
+      sizeId,
+      inStock,
     }
-    addToCart(data).then(() => {
-      getCart().then(({ data }) => {
-        dispatch({
-          type: "GET_CART",
-          payload: data.cart
-        });
-        messageApi.open({
-          type: 'success',
-          content: 'Add to cart successfully',
-        });
-      })
-    })
-      .catch(({ response }) => {
-        toast.error(response.data.message);
-      })
+    handleAddCart(data)
+
   }
   const handleSize = (id: string) => {
     console.log(id);
@@ -107,13 +47,17 @@ const Products = (props: IProps) => {
   }
   return (
     <div className="colum" key={props.product._id}><ToastContainer></ToastContainer>
-      <div className="image">{contextHolder}
+      <div className="image">
         <img id="productImage" src={props.product.image} alt="" />
         {inStock == 0 && <img style={{ width: "80px", position: "absolute", top: "0", left: "0" }} src="https://www.pngkey.com/png/full/118-1182729_out-of-stock-contemporary-human-resource-management-by.png" alt="" />}
         <i id='heart' className="fa fa-heart-o" aria-hidden="true"></i>
         <div className="icon">
           <i title="Quick view" onClick={() => showModal()} className="fa fa-eye" aria-hidden="true"></i>
-          <i onClick={() => handleAddToCart(props.product._id)} className="fa fa-cart-plus" aria-hidden="true"></i>
+          {/* Check xem còn hàng ko  */}
+          {inStock > 0 ?
+            <i onClick={() => handleAddToCart()} className="fa fa-cart-plus" aria-hidden="true"></i>
+            : <i style={{ background: "#ccc", cursor: "not-allowed" }} className="fa fa-cart-plus" aria-hidden="true"></i>
+          }
         </div>
       </div>
       <div className="content">

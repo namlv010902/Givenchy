@@ -8,11 +8,8 @@ import ShowComment from '../../../components/comment/Comment';
 import { IProduct } from '../../../types/products';
 import './DetailProduct.css';
 import Products from '../../../components/products/Products';
-// import { addToCart, getCart } from '../../../service/cart.service';
-// import { useStoreCart } from '../../../store/hooks';
-import { message } from 'antd';
-import { updateFavorite } from '../../../service/favorite.service';
 import { useCart } from '../../../hooks/useCart';
+import useFavorite from '../../../hooks/useFavorite';
 const DetailProduct = () => {
   const [show, setShow] = React.useState(false)
   const [product, setProduct] = useState<IProduct>()
@@ -23,10 +20,9 @@ const DetailProduct = () => {
   const [inStock, setInStock] = useState(0)
   const [unitsSold, setUnitsSold] = useState(0)
   const [sizeId, setSizeId] = useState("")
-  const [messageApi, contextHolder] = message.useMessage();
   const { id } = useParams()
   const { handleAddCart } = useCart()
-  const accessToken = JSON.parse(localStorage.getItem("accessToken")!);
+  const { addOrRemoveFavorite } = useFavorite()
   useEffect(() => {
     if (id) {
       getProduct(id).then(({ data }) => {
@@ -102,7 +98,7 @@ const DetailProduct = () => {
     setQuantity(parseInt(quantity))
   }
   // add to cart
-  const onAddCart=()=>{
+  const onAddCart = () => {
     handleAddCart({
       product,
       productId: id,
@@ -112,31 +108,15 @@ const DetailProduct = () => {
       inStock
     })
   }
-  //Thêm sản phẩm vào yêu thích
-  const addFavorite = () => {
-    if (!accessToken) {
-      messageApi.open({
-        type: 'error',
-        content: 'Please log in!',
-      });
-      return
-    }
-    try {
-      if (product) {
-        updateFavorite(product._id).then(({ data }) => {
-          messageApi.open({
-            type: 'success',
-            content: data.message,
-          });
-        })
-      }
-    } catch (error) {
-      alert(error)
-    }
+  //Thêm or xóa sản phẩm vào yêu thích
+  // => backend đã check sp yêu thích theo idUser từ request lúc đăng nhập vào
+  const handleFavorite = () => {
+    id && addOrRemoveFavorite(id)
   }
+
   return (
     <div style={{ minHeight: "80vh" }}>
-      <ToastContainer></ToastContainer>{contextHolder}
+      <ToastContainer></ToastContainer>
       {isLoading ? <div style={{ textAlign: "center" }}><img src="https://media1.giphy.com/media/kUTME7ABmhYg5J3psM/giphy.gif?cid=ecf05e47m4ti25gg5zz2if8kxnefsg9lo7nx4cuf5fprvtsa&ep=v1_gifs_search&rid=giphy.gif&ct=g" /> </div> :
         <div>
           {product ?
@@ -150,7 +130,7 @@ const DetailProduct = () => {
                       <img src="https://res.cloudinary.com/dgqvtbr4n/image/upload/v1688562185/fb-removebg-preview_s627uf.png" alt="" />
                     </p>
                     <div className="heart">
-                      Like <i onClick={() => addFavorite()} className="fa fa-heart-o" aria-hidden="true"></i>
+                      Like <i onClick={() => handleFavorite()} className="fa fa-heart-o" aria-hidden="true"></i>
                     </div>
                   </div>
                 </div>
@@ -178,7 +158,7 @@ const DetailProduct = () => {
                   <p id='quantity' >Quantity  <div id='form-add-cart'>
                     <p onClick={() => updateQuantity("decrease")}>-</p><input type="number" min={1} max={inStock} value={quantity} onChange={(e) => handleChangeQuantity(e.target.value)} /> <p onClick={() => updateQuantity("increase")} >+</p>
                   </div> </p>
-                  <button disabled={inStock == 0} onClick={() =>onAddCart()} className={inStock > 0 ? 'addCart' : 'cartDisabled'}><i className="fa fa-cart-plus" aria-hidden="true"></i>ADD TO CART</button>
+                  <button disabled={inStock == 0} onClick={() => onAddCart()} className={inStock > 0 ? 'addCart' : 'cartDisabled'}><i className="fa fa-cart-plus" aria-hidden="true"></i>ADD TO CART</button>
                 </div>
               </div>
               <div className="desc" >

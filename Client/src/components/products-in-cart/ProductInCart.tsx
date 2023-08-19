@@ -1,37 +1,11 @@
 import { Link } from 'react-router-dom';
-import { getCart, removeProductInCart } from '../../service/cart.service';
-import { useStoreCart } from '../../store/hooks';
-import {useEffect} from "react"
+
 import { Popover } from 'antd';
 import { scrollToTop } from '../../service/config.service';
+import { useCart } from '../../hooks/useCart';
 const ProductInCart = () => {
-    const { cart, dispatch } = useStoreCart()
+  const  {cart, handleRemove} = useCart()
   let countProductInCart = cart?.products?.length || 0
- const accessToken = JSON.parse(localStorage.getItem("accessToken")!)
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const { data } = await getCart()
-        dispatch({
-          type: "GET_CART",
-          payload: data.cart
-        })
-      } catch (error) {
-        console.log('Error fetching cart:', error);
-      }
-    }
-      if(accessToken){
-        getData()
-      }
-  }, [])
-  const handleRemove = (id: string) => {
-    removeProductInCart(id);
-    dispatch({
-      type: "DELETE_PRODUCT_IN_CART",
-      payload: id
-    });
-
-  }
   const showCart = (
     <div className='show-cart'>
       {cart?.products?.length > 0 ? <div>
@@ -62,8 +36,7 @@ const ProductInCart = () => {
   return (
     <div>
    <Popover content={showCart} placement="bottom" >
-            <Link to="/cart" onClick={()=>scrollToTop()} id='dropCart'>  <i title='Giỏ hàng của bạn' className='fa fa-shopping-basket'></i> <p>{countProductInCart}</p> </Link></Popover>
-
+   <Link to="/cart" onClick={()=>scrollToTop()} id='dropCart'>  <i title='Giỏ hàng của bạn' className='fa fa-shopping-basket'></i> <p>{countProductInCart}</p> </Link></Popover>
     </div>
   )
 }

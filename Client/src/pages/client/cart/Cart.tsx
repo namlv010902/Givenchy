@@ -1,4 +1,4 @@
-import { InputNumber,message } from 'antd';
+import { InputNumber } from 'antd';
 import './cart.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
@@ -6,33 +6,20 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect } from "react";
 import { scrollToTop } from '../../../service/config.service';
-import { useStoreCart } from '../../../store/hooks';
-import { getCart, removeProductInCart, updateCart } from '../../../service/cart.service';
+import { getCart, updateCart } from '../../../service/cart.service';
+import { ICart } from '../../../types/cart';
+import { useCart } from '../../../hooks/useCart';
 
 const Cart = () => {
   const navigate = useNavigate();
   const accessToken = JSON.parse(localStorage.getItem('accessToken')!);
-  const { cart, dispatch } = useStoreCart();
-  // const [messageApi, contextHolder] = message.useMessage();
   useEffect(() => {
     if (!accessToken) {
       navigate("/auth/login");
     }
   }, []);
-
-  useEffect(() => {
-    getCart()
-      .then(({ data }) => {
-        dispatch({
-          type: "GET_CART",
-          payload: data.cart
-        });
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
+  const {cart,handleRemove,dispatch} = useCart()
   const updateQuantity = async (quantity: number, id: string, sizeId: string) => {
-    console.log(quantity);
     if(quantity==null){
       quantity = 1
     }
@@ -41,36 +28,19 @@ const Cart = () => {
     const { inStock } = check; 
     if (quantity > inStock) {
       quantity = inStock;
-      // messageApi.open({
-      //   type: 'error',
-      //   content: 'Quantity limited in Stock',
-      // });
       toast.error("Quantity limited in Stock.");
     }
-    const data = {
-      quantity,
-    };
-
     try {
-      await updateCart(id, data);
+      await updateCart(id, {quantity});
       const { data: updatedCartData } = await getCart();
       dispatch({
         type: "GET_CART",
         payload: updatedCartData.cart
       });
     } catch (error) {
-      console.log('Error updating cart:', error);
+      alert('Error updating cart:'+error);
     }
   };
-
-  const removeInCart = async (id: string) => {
-    removeProductInCart(id);
-    dispatch({
-      type: "DELETE_PRODUCT_IN_CART",
-      payload: id
-    });
-  };
-
   return (
     <div>
       <ToastContainer></ToastContainer>
@@ -90,7 +60,7 @@ const Cart = () => {
                 </tr>
               </thead>
               <tbody>
-                {cart.products?.map((item: any) => {
+                {cart.products?.map((item: ICart) => {
                   let sum = item.price * item.quantity;
                   return (
                     <tr key={item._id}>
@@ -102,12 +72,12 @@ const Cart = () => {
                           min={1}
                           // max={item.sizeId.inStock} 
                           value={item.quantity} 
-                          onChange={(quantity) => updateQuantity(quantity, item._id, item.sizeId._id)}
+                          onChange={(quantity) =>typeof quantity=="number" &&  updateQuantity(quantity, item._id, item.sizeId._id)}
                         />
                       </td>
                       <td>${sum}</td>
                       <td>
-                        <button className='btn-removeCart' onClick={() => removeInCart(item._id)}>
+                        <button className='btn-removeCart' onClick={() => handleRemove(item._id)}>
                           <i className="fa-regular fa-circle-xmark"></i>
                         </button>
                       </td>

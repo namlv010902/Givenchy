@@ -41,5 +41,5 @@ export const useProducts=()=>{
         })
       }
     }
-    return {products, totalPage, onHandleRemove, handlePageChange}
+    return {products, totalPage, onHandleRemove, handlePageChange,dispatch}
 }

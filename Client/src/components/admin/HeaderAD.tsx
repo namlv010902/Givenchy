@@ -32,7 +32,7 @@ const HeaderAD = () => {
     <div className='header' style={{ boxShadow: "0px 5px 21px -5px #CDD1E1" }}>
       <header>
         <div className='logo'>
-          <Link onClick={() => scrollToTop()} to="/"> <img height="60px" src="https://charmee-store-demo.myshopify.com/cdn/shop/files/logo.png?v=1613708277" alt="" /></Link>
+          <Link onClick={() => scrollToTop()} to="/admin"> <img height="60px" src="https://charmee-store-demo.myshopify.com/cdn/shop/files/logo.png?v=1613708277" alt="" /></Link>
         </div>
         <Search></Search>
 

@@ -5,53 +5,16 @@ import './products.css';
 import { useEffect, useState } from "react"
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getCategories } from '../../../service/categories.service';
 import Products from '../../../components/products/Products';
-import { useStoreCategory, useStoreProducts } from '../../../store/hooks';
-import { ISize } from '../../../types/size';
-import { filterPrice, getAll, getCategoryProducts, getProductsByBrand, getProductsByGender, getProductsBySize, paginateProduct, sortProduct } from '../../../service/products.service';
+import { filterPrice, getCategoryProducts, getProductsByBrand, getProductsByGender, getProductsBySize, sortProduct } from '../../../service/products.service';
 import { getBrands } from '../../../service/brand.service';
-import { getSizes } from '../../../service/size.service';
+import { useProducts } from '../../../hooks/useProducts';
+import { useCategories } from '../../../hooks/useCategories';
+import { useSizes } from '../../../hooks/useSizes';
 
 const ProductsPage = () => {
-  const { categories, dispatch } = useStoreCategory()
-  const { products, dispatch: dispatchProducts } = useStoreProducts()
-  const [totalPage, setToTalPage] = useState(0)
-  useEffect(() => {
-    getCategories().then(({ data }) => {
-      dispatch({
-        type: 'GET_CATEGORIES',
-        payload: data.category
-      })
-    })
-    getAll().then(({ data }) => {
-      dispatchProducts({
-        type: 'GET_PRODUCTS',
-        payload: data.product.docs
-      })
-      setToTalPage((data.product.totalPages) * 10)
-    })
-  }, [])
-  const handlePageChange = (page: any) => {
-    // if (resetPage) {
-    //   paginateCategoryProducts(idCate, page).then(({ data }) => {
-    //     console.log(data.products);
-    //     setToTalPage((data.products.totalPages) * 10)
-    //     setProducts(data.products.docs)
-    //   })
-    //   console.log("Page hiện tại: " + page, "/Tổng page: " + totalPage);
-    //   return
-    // }
-    paginateProduct(page).then(({ data }) => {
-      console.log(data);
-      setToTalPage((data.product.totalPages) * 10)
-      dispatchProducts({
-        type: 'GET_PRODUCTS',
-        payload: data.product.docs
-      })
-    })
-    console.log("Page hiện tại: " + page, "/Tổng page: " + totalPage);
-  };
+  const {products, totalPage, handlePageChange,dispatch:dispatchProducts} = useProducts()
+  const { categories } = useCategories()
   const onChangePrice = (value: any) => {
     const min = value[0]
     const max = value[1]
@@ -78,10 +41,7 @@ const ProductsPage = () => {
       })
     })
   }
-  const [sizes, setSizes] = useState<ISize[]>()
-  useEffect(() => {
-    getSizes().then(({ data }) => setSizes(data.size))
-  }, [])
+  const {sizes} = useSizes()
   const handleProductsBySize = (id: string) => {
     getProductsBySize(id).then(({ data }) => {
       dispatchProducts({
@@ -91,7 +51,7 @@ const ProductsPage = () => {
     })
   }
   const handleSortChange = (value: any) => {
-    console.log(value);
+    // console.log(value);
     sortProduct(value).then(({ data }) => {
       dispatchProducts({
         type: 'GET_PRODUCTS',

@@ -1,7 +1,7 @@
 
 import { Collapse, Space } from 'antd';
 import "./Menu.css"
-import { AppstoreOutlined, DashboardOutlined } from '@ant-design/icons';
+import { AppstoreOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 const { Panel } = Collapse;
 
@@ -44,8 +44,8 @@ const Aside = () => {
           </Space>
         } key="4">
           <ul>
-            <li>Products 1</li> <br />
-            <li>Products 2</li>
+          <Link to="./brands">List brands</Link> <br />
+          <Link to="./brand/add">Create brand</Link> <br />
           </ul>
         </Panel>
         <Panel header={
@@ -55,8 +55,8 @@ const Aside = () => {
           </Space>
         } key="5">
           <ul>
-            <li>Products 1</li> <br />
-            <li>Products 2</li>
+          <Link to="./sizes">List sizes</Link> <br />
+          <Link to="./size/add">Create size</Link> <br /> 
           </ul>
         </Panel>
         <Panel header={
@@ -76,8 +76,7 @@ const Aside = () => {
           </Space>
         } key="7">
           <ul>
-            <li>Products 1</li> <br />
-            <li>Products 2</li>
+          <Link to="/admin/comments">List comments</Link>    
           </ul>
         </Panel>
         <Panel header={

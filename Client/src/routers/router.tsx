@@ -8,7 +8,6 @@ import { Register } from "../pages/auth/register/Register";
 import Profile from "../pages/client/profile/Profile";
 import Favorite from "../pages/client/favorite/Favorite";
 import Blog from "../pages/client/Blog/Blog";
-import News from "../pages/client/news/News";
 import InvoiceList from "../pages/client/order/Orders";
 import OrderDetail from "../pages/client/order-detail/OrderDetail";
 import SuccessMessage from "../pages/client/succsess-message/SuccsesMessage";
@@ -51,7 +50,6 @@ export const router = createBrowserRouter([
       { path: '/profile', element: <Profile /> },
       { path: '/favorite', element: <Favorite /> },
       { path: '/blog', element: <Blog /> },
-      { path: '/news', element: <News /> },
       { path: '/order', element: <InvoiceList /> },
       { path: '/order/:id', element: <OrderDetail /> },
       { path: '/message', element: <SuccessMessage /> },

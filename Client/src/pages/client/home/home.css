@@ -1,50 +1,38 @@
 .banner img {
     width: 100%;
-
 }
-
 .product {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 20px;
-
 }
-
 .home-main {
     padding: 20px 100px;
-    
 }
-
 .product img {
     width: 100%;
     border-radius: 8px;
     height: 202.48px;
-
 }
-
 .image img {
     width: 100%;
     border-radius: 5px 5px 0 0;
+}
+#productImage {
     height: 234px;
 }
-
 .banner-child {
     position: relative;
-
 }
-
 .banner-child img {
     width: 100%;
     height: auto;
-
 }
-
 .trendy-text h3 {
     font-size: 40px;
     font-family: cursive;
     margin-bottom: 10px;
 }
-
 #heart {
     position: absolute;
     top: 0;
@@ -55,30 +43,23 @@
     padding: 10px;
     color: #fff;
     cursor: pointer;
-
 }
-
 .products {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-gap: 25px;
     margin-top: 20px;
     margin-bottom: 50px;
-    /* background-color: #F3F3F3; */
-
 }
-
 .products .colum {
     border-radius: 5px;
     background-color: #fff;
     border: 1px solid #f1f1f1;
 }
-
 .products .colum {
     position: relative;
     display: inline-block;
 }
-
 .products .colum::after {
     content: "";
     position: absolute;
@@ -90,45 +71,33 @@
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
 }
-
 .products .colum:hover::after {
     opacity: 1;
 }
-
 .products .colum:hover {
     border: 1px solid #B29472;
 }
-
 .content {
     padding: 15px;
-
 }
-
 .chanel-img img {
     width: 50%;
     height: fit-content;
 }
-
 .chanel-text h1 {
     color: #6D4848;
     font-family: "Lora", Sans-serif;
     font-size: 45px;
     font-weight: 400;
     line-height: 58px;
-
-
 }
-
 .chanel-text {
-   
     padding: 50px
 }
-
 .chanel-text p {
     margin: 20px 0;
     color: #7A7A7A;
 }
-
 .chanel-text button {
     font-family: "Poppins", Sans-serif;
     font-size: 16px;
@@ -141,31 +110,23 @@
     border-radius: 40px 40px 40px 40px;
     padding: 15px 30px 15px 30px;
     color: #fff;
-
 }
-
 .title {
     text-align: center;
 }
-
 .title h1 {
-
     font-size: 20px;
     letter-spacing: 5px;
     text-transform: uppercase;
-
     border-bottom: 2px solid #3a8d9e;
     padding-bottom: 10px;
     margin: 20px 0;
     display: inline-block;
 }
-
-
 .title em {
     display: block;
     margin-top: 10px;
 }
-
 .content h3 {
     font-size: smaller;
     font-weight: 500;
@@ -173,8 +134,7 @@
     background-color: #ffebeb;
     display: inline;
 }
-
-.content >p >a {
+.content>p>a {
     margin: 6px 0;
     overflow: hidden;
     display: -webkit-box;
@@ -188,21 +148,16 @@
     text-transform: uppercase;
     text-decoration: none;
 }
-
 .content strong {
     color: #3a8d9e;
 }
-
-
 .icon {
     position: absolute;
-
     bottom: 0%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 15px;
 }
-
 .icon i {
     border-radius: 10px;
     padding: 15px;
@@ -212,7 +167,6 @@
     transition: 0.3s ease-in-out;
     cursor: pointer;
 }
-
 .icon i:hover {
     background-color: #F8BF85;
     transform: rotate(360deg);
@@ -220,19 +174,15 @@
     border-radius: 50%;
     color: #fff;
 }
-
 .products .image {
     position: relative;
     overflow: hidden;
     border-radius: 5px 5px 0 0;
-
 }
-
 .products .colum:hover img {
     transition: 0.3s ease-in-out;
     transform: scale(1.2);
 }
-
 .icon {
     position: absolute;
     bottom: 0%;
@@ -241,12 +191,10 @@
     transition: bottom 0.3s ease, opacity 0.3s ease;
     transform: translateX(-50%);
 }
-
 .colum:hover .icon {
     bottom: 40%;
     opacity: 1;
 }
-
 .trendy-text {
     width: 40%;
     position: absolute;
@@ -255,39 +203,31 @@
     transform: translateY(-50%);
     z-index: 1;
 }
-
 .inner-image {
     display: flex;
 }
-
 .inner-image,
 .inner-text {
     width: 50%;
 }
-
 .img-Above {
     position: relative;
 }
-
 .img-Above img {
     margin-right: -150px;
     border-radius: 15px;
     border: 5px solid #fff;
     margin-top: 120px;
 }
-
 .e-con-inner {
     display: flex;
     margin-top: 50px;
 }
-
 .inner-text {
     padding-top: 30px;
     background-image: url(https://clients.oliveconcepts.com/elementor/wp-content/uploads/2023/06/oceanic-perfume-bac3.png);
     background-repeat: no-repeat;
-    
 }
-
 .inner-text h3 {
     color: #6D4848;
     font-family: "Lora", Sans-serif;
@@ -295,12 +235,10 @@
     font-weight: 400;
     line-height: 58px;
 }
-
 .inner-text p {
     margin: 20px 0;
     color: #7A7A7A;
 }
-
 .inner-text button {
     font-family: "Poppins", Sans-serif;
     font-size: 16px;
@@ -314,7 +252,6 @@
     padding: 15px 30px 15px 30px;
     color: #fff;
 }
-
 .img-dioi img {
     width: 100%;
     border-radius: 15px;

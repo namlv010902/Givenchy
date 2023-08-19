@@ -7,6 +7,7 @@ import { useStoreCart } from "../../store/hooks"
 import { ToastContainer, toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 import { Modal, message } from 'antd';
+import { ICart } from "../../types/cart"
 interface IProps {
   product: IProduct,
 }
@@ -21,11 +22,9 @@ const Products = (props: IProps) => {
   const showModal = () => {
     setIsModalOpen(true);
   };
-
   const handleOk = () => {
     setIsModalOpen(false);
   };
-
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -37,7 +36,6 @@ const Products = (props: IProps) => {
       });
       return
     }
-
     if (!sizeId) {
       messageApi.open({
         type: 'error',
@@ -63,7 +61,7 @@ const Products = (props: IProps) => {
     })
     // sản phẩm trong giỏ hàng
     if (cart?.products) {
-      const productExistInCart = cart.products.find((item: any) => item.productId._id == props.product?._id && item.sizeId._id)
+      const productExistInCart = cart.products.find((item: ICart) => item.productId._id == props.product?._id && item.sizeId._id)
       if (productExistInCart) {
         if (productCurrent) {
           if (productExistInCart.quantity >= productCurrent?.inStock) {
@@ -76,9 +74,7 @@ const Products = (props: IProps) => {
         }
       }
     }
-
     const data = {
-
       sizeId,
       productId,
       price,
@@ -99,7 +95,6 @@ const Products = (props: IProps) => {
       .catch(({ response }) => {
         toast.error(response.data.message);
       })
-    // console.log(data);
   }
   const handleSize = (id: string) => {
     console.log(id);
@@ -109,14 +104,11 @@ const Products = (props: IProps) => {
       setInStock(productExist?.inStock);
       setPrice(productExist?.price)
     }
-
-
   }
-
   return (
     <div className="colum" key={props.product._id}><ToastContainer></ToastContainer>
       <div className="image">{contextHolder}
-        <img src={props.product.image} alt="" />
+        <img id="productImage" src={props.product.image} alt="" />
         {inStock == 0 && <img style={{ width: "80px", position: "absolute", top: "0", left: "0" }} src="https://www.pngkey.com/png/full/118-1182729_out-of-stock-contemporary-human-resource-management-by.png" alt="" />}
         <i id='heart' className="fa fa-heart-o" aria-hidden="true"></i>
         <div className="icon">
@@ -130,7 +122,6 @@ const Products = (props: IProps) => {
         {props.product.sizes.map((item: any) => (
           <button onClick={() => handleSize(item.sizeId._id)} className={sizeId == item.sizeId._id ? "btn-sizeFocus" : "btn-size"} style={{ margin: "10px 2px" }}>{item.sizeId.name}</button>
         ))}
-
       </div>
       <Modal title={props.product.name} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <div style={{ display: "flex", margin: "15px 0" }}>

@@ -12,6 +12,7 @@ import { addToCart, getCart } from '../../../service/cart.service';
 import { useStoreCart } from '../../../store/hooks';
 import { message } from 'antd';
 import { updateFavorite } from '../../../service/favorite.service';
+import { useCart } from '../../../hooks/useCart';
 
 const DetailProduct = () => {
   const [show, setShow] = React.useState(false)
@@ -27,6 +28,8 @@ const DetailProduct = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const { cart, dispatch } = useStoreCart()
   // console.log(relatedProducts);
+  const hook = useCart()
+  console.log(hook);
   const { id } = useParams()
   const accessToken = JSON.parse(localStorage.getItem("accessToken")!);
   useEffect(() => {

@@ -12,29 +12,32 @@ const Checkout = () => {
   const accessToken = JSON.parse(localStorage.getItem('accessToken')!)
   const { cart, dispatch } = useStoreCart()
   const [isLoading, setIsLoading] = useState(false)
-  const { user, dispatch: dispatchUser } = useStoreUser()
+  const { user, dispatchUser } = useStoreUser()
   const navigate = useNavigate()
   useEffect(() => {
     if (!accessToken) {
-      navigate('auth/login')
-    }
-    if (cart?.products?.length == 0) {
-      navigate("/")
-    }
-    getProfile().then(({ data }) => {
-      dispatchUser({
-        type: 'GET_PROFILE',
-        data: data.user
+      navigate("/auth/login")
+    } else {
+      getProfile().then(({ data }) => {
+        dispatchUser({
+          type: "GET_PROFILE",
+          payload: data.user
+        })
       })
-    })
-    getCart().then(({data})=>{
+    }
+  }, [])
+  useEffect(() => {
+    getCart().then(({ data }) => {
       dispatch({
         type: 'GET_CART',
         payload: data.cart
       })
     })
-  }, [cart, accessToken])
-  // console.log(cart)
+    if (cart.products.length == 0) {
+      navigate("/")
+    }
+  }, [])
+  console.log(user)
   const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = (data: any) => {
     data["cartId"] = cart._id
@@ -63,7 +66,7 @@ const Checkout = () => {
   return (
     <div className='checkout-main'>
       <div className="checkout" style={{ position: "relative" }}>
-        <h3>Checkout</h3> {isLoading ? <img height={100} style={{ position: "absolute", top: "100px", zIndex: "1", left: "5", right: "0" }} src="https://i.gifer.com/ZKZg.gif" /> : ""
+        <h3>Checkout</h3> {isLoading ? <img height={100} style={{ position: "absolute", top: "100px", zIndex: "1", left: "5", right: "0" }} src="" /> : ""
         } {user &&
           <form className="formCheckout" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-group">

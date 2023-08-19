@@ -7,8 +7,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useEffect } from "react";
 import { scrollToTop } from '../../../service/config.service';
 import { getCart, updateCart } from '../../../service/cart.service';
-import { ICart } from '../../../types/cart';
+import { ICartProduct } from '../../../types/cart';
 import { useCart } from '../../../hooks/useCart';
+
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -18,27 +19,27 @@ const Cart = () => {
       navigate("/auth/login");
     }
   }, []);
-  const {cart,handleRemove,dispatch} = useCart()
+  const { cart, handleRemove, dispatch } = useCart()
   const updateQuantity = async (quantity: number, id: string, sizeId: string) => {
-    if(quantity==null){
+    if (quantity == null) {
       quantity = 1
     }
-    const checkCount = cart.products.find((item: any) => item._id === id);
+    const checkCount = cart.products.find((item: ICartProduct) => item._id === id);
     const check = checkCount.productId.sizes.find((item: any) => item.sizeId === sizeId);
-    const { inStock } = check; 
+    const { inStock } = check;
     if (quantity > inStock) {
       quantity = inStock;
       toast.error("Quantity limited in Stock.");
     }
     try {
-      await updateCart(id, {quantity});
+      await updateCart(id, { quantity });
       const { data: updatedCartData } = await getCart();
       dispatch({
         type: "GET_CART",
         payload: updatedCartData.cart
       });
     } catch (error) {
-      alert('Error updating cart:'+error);
+      alert('Error updating cart:' + error);
     }
   };
   return (
@@ -60,19 +61,21 @@ const Cart = () => {
                 </tr>
               </thead>
               <tbody>
-                {cart.products?.map((item: ICart) => {
+                {cart.products?.map((item: ICartProduct,index:number) => {
                   let sum = item.price * item.quantity;
+                  console.log(item);
+                  
                   return (
-                    <tr key={item._id}>
-                      <td>{item.productId.name}<p style={{ color: "#015E6B", fontWeight: "bold" }}>( {item.sizeId.name} )</p></td>
+                    <tr key={index}>
+                      <td>{item.productId.name}<p style={{ color: "#015E6B", fontWeight: "bold" }}>( {item.sizeId?.name} )</p></td>
                       <td><Link to={`/product/${item.productId._id}`} ><img src={item.productId.image} alt="" /></Link></td>
                       <td style={{ color: "#fca120" }}> ${item.price}</td>
                       <td>
                         <InputNumber
                           min={1}
                           // max={item.sizeId.inStock} 
-                          value={item.quantity} 
-                          onChange={(quantity) =>typeof quantity=="number" &&  updateQuantity(quantity, item._id, item.sizeId._id)}
+                          value={item.quantity}
+                          onChange={(quantity) => typeof quantity === "number" && updateQuantity(quantity, item._id, item.sizeId._id)}
                         />
                       </td>
                       <td>${sum}</td>
@@ -94,7 +97,7 @@ const Cart = () => {
             </div>
           </div>
         ) : (
-          <div className='cart-err'>   
+          <div className='cart-err'>
             <img src="https://bizweb.dktcdn.net/100/331/465/themes/684469/assets/empty-bags.jpg?1541753997372" alt="" /> <br />
             <Link to="/products">
               <Button onClick={() => scrollToTop()}>GO TO WHICH SHOP?</Button>

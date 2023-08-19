@@ -8,9 +8,14 @@ import { IProduct } from "../types/products";
 import { ISize } from "../types/size";
 import { IUser } from "../types/user";
 
-export const initCart: ICart[] = []
+export const initCart:ICart = {
+    _id: "",
+    useId: "",
+    totalPrice: 0,
+    products: []
+  };
 
-export const cartReducer = (state: ICart[], action: { type: string, payload: ICart[] }) => {
+export const cartReducer = (state: ICart, action: { type: string, payload: ICart }) => {
     // console.log("running cart...", state);
     // console.log(action.payload);
 
@@ -20,27 +25,23 @@ export const cartReducer = (state: ICart[], action: { type: string, payload: ICa
         // case 'POST_CART':
         //     return [...state, {...action.payload}];
         case 'DELETE_PRODUCT_IN_CART':
-            const product = state.products.find((p: any) => p._id === action.payload)
+            const product =  state.products.find((p: any) => p._id === action.payload)
             const updatedProducts = state.products.filter((item: any) => item._id !== action.payload);
-            const updateTotalPrice = state.totalPrice - product.price * product.quantity
+            const updateTotalPrice = product && state.totalPrice - product.price * product.quantity
             return {
                 ...state,
                 products: updatedProducts,
                 totalPrice: updateTotalPrice
-
             }
         case 'DELETE_ALL_PRODUCTS_IN_CART':
-
             return state?.products ? state.products = [] : state
         default: return state
     }
 }
 export const initComment: IComment[] = []
-
 export const commentReducer = (state: IComment[], action: { type: string, payload: IComment[] }) => {
     // console.log("running comment...", state);
     // console.log("payload...", action.payload);
-
     switch (action.type) {
         case 'GET_COMMENTS':
             return action.payload
@@ -51,10 +52,8 @@ export const commentReducer = (state: IComment[], action: { type: string, payloa
     }
 }
 export const initOrder: IOrder[] = []
-
 export const orderReducer = (state: IOrder[], action: { type: string, payload: IOrder[] }) => {
     console.log("running orders...", state)
-
     switch (action.type) {
         case 'GET_ORDERS':
             return action.payload
@@ -63,10 +62,9 @@ export const orderReducer = (state: IOrder[], action: { type: string, payload: I
         case 'USER_FILTER_ORDERS':
             console.log(action.payload);
             const initState = [...state]
-            const { userId, status } = action.payload;
+            const { userId, status } = action.payload[0];
             const filteredOrders = initState.filter(item => item.userId === userId && item.status === status);
             return filteredOrders;
-        
         // case 'USER_CANCEL_ORDER':
         //     return action.payload
         // case 'POST_ORDER':
@@ -75,12 +73,9 @@ export const orderReducer = (state: IOrder[], action: { type: string, payload: I
         default: return state
     }
 }
-
 export const initUser: IUser[] = []
-
 export const userReducer = (state: IUser[], action: { type: string, payload: IUser[] }) => {
      console.log("running IUser...", state)
-
     switch (action.type) {
         case 'GET_USERS':
             return action.payload
@@ -88,7 +83,6 @@ export const userReducer = (state: IUser[], action: { type: string, payload: IUs
             return action.payload
         case 'UPDATE_PROFILE':
             return action.payload
-
         default: return state
     }
 }

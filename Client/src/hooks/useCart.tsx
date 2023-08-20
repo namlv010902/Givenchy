@@ -25,8 +25,6 @@ export const useCart =()=>{
     
   }, [accessToken])
  
-
-  
   // xóa 1 sp (.) giỏ hàng
   const handleRemove = (id: string) => {
     removeProductInCart(id);
@@ -39,7 +37,7 @@ export const useCart =()=>{
   const handleAddCart = (props: IProps) => {
     const accessToken = JSON.parse(localStorage.getItem("accessToken")!);
     if (!accessToken) {
-        toast.error('Please log in!')
+        toast.error('Please log in!', { autoClose: 1500 })
        return
         };
     //kiểm tra trường hợp nếu trong giỏ của user đã tồn tại sản phẩm đó tiếp tục thêm vượt quá tồn kho
@@ -80,7 +78,7 @@ export const useCart =()=>{
                     payload: data.cart
                 });
             });
-           toast.success('Add to Cart successfully')
+           toast.success('Add to Cart successfully', { autoClose: 1500 })
         })
             .catch(({ response }) => {
                 alert(response.data.message);

@@ -12,7 +12,7 @@ import { useSizes } from '../../../hooks/useSizes';
 import { useBrand } from '../../../hooks/useBrand';
 
 const ProductsPage = () => {
-  const {products, totalPage, handlePageChange,dispatch:dispatchProducts} = useProducts()
+  const { products, totalPage, handlePageChange, dispatch: dispatchProducts } = useProducts()
   const { categories } = useCategories()
   const onChangePrice = (value: any) => {
     const min = value[0]
@@ -40,7 +40,7 @@ const ProductsPage = () => {
       })
     })
   }
-  const {sizes} = useSizes()
+  const { sizes } = useSizes()
   const handleProductsBySize = (id: string) => {
     getProductsBySize(id).then(({ data }) => {
       dispatchProducts({
@@ -59,7 +59,7 @@ const ProductsPage = () => {
     })
   };
   const gender = ['Man', 'Woman', 'Unisex']
-  const {brand} = useBrand()
+  const { brand } = useBrand()
   const handleProductByBrand = (id: string) => {
     getProductsByBrand(id).then(({ data }) => {
       dispatchProducts({
@@ -79,7 +79,9 @@ const ProductsPage = () => {
               <div className="cate">
                 {categories?.map((item: any) => {
                   return (
-                    <button key={item._id} onClick={() => handleCategoryProducts(item._id)}> {item?.name}</button>
+                    <>
+                      {(item.name !== "Default") && <button key={item._id} onClick={() => handleCategoryProducts(item._id)}> {item?.name}</button>}
+                    </>
                   )
                 })}
               </div>

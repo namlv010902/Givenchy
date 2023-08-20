@@ -4,7 +4,8 @@ import { Popover } from 'antd';
 import { scrollToTop } from '../../service/config.service';
 import { useCart } from '../../hooks/useCart';
 const ProductInCart = () => {
-  const  {cart, handleRemove} = useCart()
+
+    const  {cart, handleRemove} = useCart()
   let countProductInCart = cart?.products?.length || 0
   const showCart = (
     <div className='show-cart'>

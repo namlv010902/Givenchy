@@ -16,13 +16,14 @@ export const useCart =()=>{
  
  const accessToken = JSON.parse(localStorage.getItem("accessToken")!)
   useEffect(() => {
+  if(accessToken){
     getCart().then(({data})=>{
-       dispatch({
-          type: "GET_CART",
-          payload: data.cart
-        })
-    })  
-    
+        dispatch({
+           type: "GET_CART",
+           payload: data.cart
+         })
+     }) 
+  } 
   }, [accessToken])
  
   // xóa 1 sp (.) giỏ hàng

@@ -1,24 +1,22 @@
 import './header.css'
 
 import { Popover } from 'antd';
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useEffect } from 'react';
-import { useStoreCart, useStoreUser } from '../../store/hooks';
+import {  useStoreUser } from '../../store/hooks';
 import { getProfile } from '../../service/auth.service';
 import ProductInCart from '../products-in-cart/ProductInCart';
 import Search from '../search/Search';
 import { scrollToTop } from '../../service/config.service';
+import { useAuth } from '../../hooks/useLogout';
 const Header = () => {
-  const { dispatch } = useStoreCart()
   const { user, dispatchUser } = useStoreUser()
+  const {handleLogout} = useAuth()
   const accessToken = JSON.parse(localStorage.getItem('accessToken')!);
-  const navigate = useNavigate()
   // console.log(user);
-  
   useEffect(() => {
     if (accessToken) {
-      // console.log(accessToken);
-      
+      // console.log(accessToken)
       getProfile().then(({ data }) => {
         dispatchUser({
           type: "GET_PROFILE",
@@ -35,16 +33,7 @@ const Header = () => {
     }
   }, [accessToken])
   //  console.log(user);
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken')
-    dispatch({
-      type: 'DELETE_ALL_PRODUCTS_IN_CART'
-    })
-    dispatchUser({
-      type: 'GET_PROFILE',
-    })
-    navigate('/')
-  }
+  
   const myAccount = (
     <div style={{ textAlign: "center" }}>
       <Link to="/profile" onClick={() => scrollToTop()}>Account</Link> <br />

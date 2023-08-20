@@ -1,11 +1,15 @@
 import { Link, useNavigate } from "react-router-dom"
 import Search from "../search/Search"
 import { scrollToTop } from "react-scroll/modules/mixins/animate-scroll"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useStoreUser } from "../../store/hooks"
 import { getProfile } from "../../service/auth.service"
+import { Popover } from "antd"
+import { useAuth } from "../../hooks/useLogout"
 const HeaderAD = () => {
+  const isFirstRender = useRef(true);
   const { user, dispatchUser } = useStoreUser()
+  const {handleLogout} = useAuth()
   const navigate = useNavigate()
   const token = JSON.parse(localStorage.getItem('accessToken')!)
   useEffect(() => {
@@ -17,16 +21,21 @@ const HeaderAD = () => {
         type: 'GET_PROFILE',
         payload: data.user
       })
-      // if (user.role !== "admin") {
-      //   navigate("/")
-      //   return
-      // }
-
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+      } else if (user.role == "member") {
+        navigate("/")
+      }
     })
 
   }, [token])
-
-  console.log(typeof (user.role));// ra admin - type:string
+  // console.log(user.role);
+ 
+  const content = (
+    <div>
+      <p style={{ cursor: "pointer" }} onClick={() => handleLogout()}>Log out</p>
+    </div>
+  )
 
   return (
     <div className='header' style={{ boxShadow: "0px 5px 21px -5px #CDD1E1" }}>
@@ -41,7 +50,8 @@ const HeaderAD = () => {
             <i className="fa fa-bell" aria-hidden="true"></i>
             <i className="fa-solid fa-envelope"></i>
           </div>
-          <img style={{ width: "100%" }} src="https://demo.bootstrapdash.com/skydash/template/images/faces/face28.jpg" alt="" />
+          <Popover placement='bottom' content={content} >
+            <img id="avatar" style={{ width: "100%" }} src={user.avatar} alt="" /></Popover>
         </div>
       </header>
     </div>

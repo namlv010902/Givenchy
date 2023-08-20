@@ -35,6 +35,7 @@ import ListBrands from "../pages/admin/brands/ListBrands";
 import UpdateBrand from "../pages/admin/brands/UpdateBrand";
 import CreateBrand from "../pages/admin/brands/CreateBrand";
 import UpdateCategory from "../pages/admin/categories/UpdateCategory";
+import DashBroad from "../pages/admin/dashbroad/DashBroad";
 
 export const router = createBrowserRouter([
   {
@@ -65,6 +66,7 @@ export const router = createBrowserRouter([
     path: '/admin',
     element: <LayoutAD />,
     children: [
+      { path: '/admin/', element: <DashBroad /> },
       { path: '/admin/products', element: <ListProducts /> },
       { path: '/admin/product/add', element: <CreateProduct /> },
       { path: '/admin/product/update/:id', element: <UpdateProduct /> },

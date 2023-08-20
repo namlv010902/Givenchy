@@ -166,13 +166,14 @@ ul li a {
 }
 
 .btn-show-cart {
-    background-color: #ff7600;
+    background-color: #008060;
     color: #fff;
     font-size: 16px;
-    padding: 10px 20px;
+    padding: 7px 15px;
     border: none;
     width: 100%;
     cursor: pointer;
+    border-radius: 5px;
 }
 
 .show-cart {
@@ -188,6 +189,7 @@ ul li a {
 }
 
 #priceTotal {
+    margin-top: 10px;
     display: flex;
     justify-content: center;
 }

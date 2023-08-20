@@ -28,7 +28,11 @@ const Login = () => {
     })
     .catch(({response})=>toast.error(response.data.message))
   };
-
+  const handleGoogleLogin = () => {
+    const clientId = 'Givenchy-396512';
+    const redirectUri = 'http://localhost:1573/'; // Địa chỉ URL để Google chuyển hướng sau khi đăng nhập thành công
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=openid%20email%20profile`;
+  };
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
@@ -41,7 +45,7 @@ const Login = () => {
       <h3 style={{ textAlign: "center", marginTop: "30px" }}>Login</h3>
       <div className="login-btn">
         <img src="https://bizweb.dktcdn.net/assets/admin/images/login/fb-btn.svg" alt="" />
-        <img src="https://bizweb.dktcdn.net/assets/admin/images/login/gp-btn.svg" alt="" />
+        <img onClick={()=>handleGoogleLogin()} src="https://bizweb.dktcdn.net/assets/admin/images/login/gp-btn.svg" alt="" />
       </div>
       <div id='formLogin'>
         <Form

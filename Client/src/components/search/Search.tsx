@@ -37,7 +37,7 @@ const Search = () => {
     return (
         <form action="#" id="formSearch" >
             <Popover title={showSearch}> <input onChange={e => handleSearch(e.target.value)} id="inputSearch" type="text" name="" placeholder="Search..." /></Popover>
-            <button className='btn-search'><i className="fa fa-search" aria-hidden="true"></i></button>
+            <button className='btn-search' disabled><i className="fa fa-search" aria-hidden="true"></i></button>
         </form>
     )
 }

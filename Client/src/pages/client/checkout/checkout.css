@@ -1,16 +1,25 @@
 .checkout-main {
   padding: 30px 60px;
   display: flex;
-  margin-top: 80px;
 }
 
 .checkout {
   width: 50%;
 }
+.title-checkout{
+  padding: 15px;
+  background-color: #e8f0fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 85px;
+  margin-bottom: 20px;
+}
 
 .form-group>input,
 .form-group>button,
 .form-group>textarea {
+  margin-bottom: 15px;
   width: 500px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -25,13 +34,11 @@ textarea:focus {
 }
 
 .form-group {
-  margin-top: 20px;
   margin-right: 40px;
 }
 
 .form-group>button {
-  /* background-color: #00aaf0; */
-  background: linear-gradient(0deg,#1786fb,#2cfefe)!important;
+  background-color: #1786fb; 
   border: none;
   text-transform: uppercase;
   cursor: pointer;
@@ -43,15 +50,23 @@ textarea:focus {
 .form-group>button:hover {
   opacity: 0.8;
 }
-
-.cart {
-  border: 1px solid #36bb7d;
-  padding: 20px;
+#pay{
+ margin: 5px 0;
+  padding: 10px 15px;
+  background-color: #FFF;
+  border: 2px solid rgba(115,115,115,0.1);
+  border-radius: 5px;
+}
+.cart { 
   height: fit-content;
-  margin-top: 70px;
   border-radius: 5px;
   width: 50%;
-
+  background-color: #f8f8f8;
+  background-image: url(https://premiumperfume.in/wp-content/themes/basel/images/checkout-border.jpg);
+  background-position: left top;
+  background-repeat: no-repeat;
+  padding: 40px 30px;
+  margin-top: 8px;
 }
 
 .cartItem {
@@ -75,7 +90,7 @@ textarea:focus {
 
 #cartTotalPrice {
   text-align: center;
-  background-color: #36bb7d;
+  background-color: #4fa861;
   color: #fff;
   padding: 7px;
   font-size: 17px;

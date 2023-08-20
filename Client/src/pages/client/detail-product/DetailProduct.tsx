@@ -1,7 +1,7 @@
 import { Image } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getCategoryProducts, getProduct } from '../../../service/products.service';
 import ShowComment from '../../../components/comment/Comment';
@@ -24,8 +24,9 @@ const DetailProduct = () => {
   const { id } = useParams()
   const { handleAddCart } = useCart()
   const { addOrRemoveFavorite,favorites } = useFavorite()
-  const productFvExist = favorites.find((item:IFavorite)=>item.productId._id === product?._id)
-  console.log(productFvExist);
+  const productFvExist = favorites.find((item: IFavorite) => {
+    return item.productId.some((product: IProduct) => product._id === product?._id);
+});
   
   useEffect(() => {
     if (id) {
@@ -115,6 +116,10 @@ const DetailProduct = () => {
   //Thêm or xóa sản phẩm vào yêu thích
   // => backend đã check sp yêu thích theo idUser từ request lúc đăng nhập vào
   const handleFavorite = () => {
+    if(!JSON.parse(localStorage.getItem("accessToken")!)){
+      toast.error("Please login !",{autoClose:1500})
+      return
+    }
     id && addOrRemoveFavorite(id)
   }
 
@@ -134,7 +139,7 @@ const DetailProduct = () => {
                       <img src="https://res.cloudinary.com/dgqvtbr4n/image/upload/v1688562185/fb-removebg-preview_s627uf.png" alt="" />
                     </p>
                     <div className="heart">
-                      Like {productFvExist ? <i style={{color:"#f12"}} onClick={() => handleFavorite()} className="fa fa-heart" aria-hidden="true"></i> : <i onClick={() => handleFavorite()} className="fa fa-heart-o" aria-hidden="true"></i> }
+                     {productFvExist ? <i style={{color:"#f12"}} onClick={() => handleFavorite()} className="fa fa-heart" aria-hidden="true"></i> : <i onClick={() => handleFavorite()} className="fa fa-heart-o" aria-hidden="true"></i> }
                     </div>
                   </div>
                 </div>
@@ -155,7 +160,7 @@ const DetailProduct = () => {
                     <p>InStock
                       <span> {inStock}</span>
                     </p>
-                    <p >UnitsSold
+                    <p >Sold
                       <span> {unitsSold}</span>
                     </p>
                   </div>

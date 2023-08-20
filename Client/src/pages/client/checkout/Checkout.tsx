@@ -1,43 +1,29 @@
 
-import { useEffect, useState } from 'react'
-import { useStoreCart, useStoreUser } from '../../../store/hooks'
+import { useEffect, useState,useRef } from 'react'
+import {useStoreUser } from '../../../store/hooks'
 import './checkout.css'
-import { getCart } from '../../../service/cart.service'
 import { useForm } from "react-hook-form";
 import { createOrder } from '../../../service/order.service';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { getProfile } from '../../../service/auth.service';
+import { useCart } from '../../../hooks/useCart';
 const Checkout = () => {
   const accessToken = JSON.parse(localStorage.getItem('accessToken')!)
-  const { cart, dispatch } = useStoreCart()
+  const { cart, dispatch } = useCart()
   const [isLoading, setIsLoading] = useState(false)
-  const { user, dispatchUser } = useStoreUser()
+  const isFirstRender = useRef(true);
+  const {user} = useStoreUser()
   const navigate = useNavigate()
   useEffect(() => {
     if (!accessToken) {
       navigate("/auth/login")
-    } else {
-      getProfile().then(({ data }) => {
-        dispatchUser({
-          type: "GET_PROFILE",
-          payload: data.user
-        })
-      })
-    }
-  }, [])
-  useEffect(() => {
-    getCart().then(({ data }) => {
-      dispatch({
-        type: 'GET_CART',
-        payload: data.cart
-      })
-    })
-    if (cart.products.length == 0) {
+    } 
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    } else if(cart?.products?.length==0) {
       navigate("/")
     }
-  }, [])
-  console.log(user)
+  }, [accessToken,cart])
   const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = (data: any) => {
     data["cartId"] = cart._id
@@ -66,12 +52,12 @@ const Checkout = () => {
   return (
     <div className='checkout-main'>
       <div className="checkout" style={{ position: "relative" }}>
-        <h3>Checkout</h3> {isLoading ? <img height={100} style={{ position: "absolute", top: "100px", zIndex: "1", left: "5", right: "0" }} src="" /> : ""
+        <h3>Checkout</h3> {isLoading ? <img height={100} style={{ position: "absolute", top: "100px", zIndex: "1", left: "5", right: "0" }} src="https://i.gifer.com/ZKZg.gif" /> : ""
         } {user &&
           <form className="formCheckout" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-group">
               <label htmlFor="">CustomerName</label> <br />
-              <input defaultValue={user.name} type="text" {...register("customerName", { required: true })} /> <br />
+              <input value={user.name} type="text" {...register("customerName", { required: true })} /> <br />
               {errors.customerName?.type === 'required' && <span style={{ color: "#f12" }}>This is required</span>}
             </div>
             <div className="form-group">

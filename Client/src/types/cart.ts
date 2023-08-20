@@ -15,6 +15,6 @@ export interface ICartProduct {
   export interface ICart {
     _id: string;
     useId: string;
-    totalPrice: number;
+    totalPrice?: number;
     products: ICartProduct[];
   }

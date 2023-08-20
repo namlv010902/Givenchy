@@ -8,33 +8,35 @@ import { IProduct } from "../types/products";
 import { ISize } from "../types/size";
 import { IUser } from "../types/user";
 
-export const initCart:ICart = {
+export const initCart: ICart = {
     _id: "",
     useId: "",
     totalPrice: 0,
     products: []
-  };
-
-export const cartReducer = (state: ICart, action: { type: string, payload: ICart }) => {
+};
+export const cartReducer = (state: ICart, action: { type: string; payload: ICart }): ICart => {
     // console.log("running cart...", state);
     // console.log(action.payload);
-
     switch (action.type) {
         case 'GET_CART':
             return action.payload
         // case 'POST_CART':
         //     return [...state, {...action.payload}];
         case 'DELETE_PRODUCT_IN_CART':
-            const product =  state.products.find((p: any) => p._id === action.payload)
+            const product = state.products.find((p: any) => p._id === action.payload)
             const updatedProducts = state.products.filter((item: any) => item._id !== action.payload);
-            const updateTotalPrice = product && state.totalPrice - product.price * product.quantity
+            const updateTotalPrice = (state.totalPrice && product) && state.totalPrice - product.price * product.quantity
             return {
                 ...state,
                 products: updatedProducts,
                 totalPrice: updateTotalPrice
             }
+
         case 'DELETE_ALL_PRODUCTS_IN_CART':
-            return state?.products ? state.products = [] : state
+            return {
+                ...state,
+                products: []
+            };
         default: return state
     }
 }
@@ -75,7 +77,7 @@ export const orderReducer = (state: IOrder[], action: { type: string, payload: I
 }
 export const initUser: IUser[] = []
 export const userReducer = (state: IUser[], action: { type: string, payload: IUser[] }) => {
-     console.log("running IUser...", state)
+    console.log("running IUser...", state)
     switch (action.type) {
         case 'GET_USERS':
             return action.payload

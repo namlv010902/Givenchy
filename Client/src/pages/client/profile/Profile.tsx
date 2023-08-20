@@ -9,7 +9,7 @@ import ImgCrop from 'antd-img-crop';
 import type { UploadFile } from 'antd/es/upload/interface';
 import axios from 'axios';
 import { useStoreUser } from '../../../store/hooks';
-import { getProfile, updateProfile } from '../../../service/auth.service';
+import {  updateProfile } from '../../../service/auth.service';
 import { Link, useNavigate } from 'react-router-dom';
 import { scrollToTop } from '../../../service/config.service';
 
@@ -24,13 +24,6 @@ const Profile = () => {
   useEffect(() => {
     if (!accessToken) {
       navigate("/auth/login")
-    }else{
-      getProfile().then(({ data }) => {
-        dispatchUser({
-          type: "GET_PROFILE",
-          payload: data.user
-        })
-      })
     }
   }, [accessToken])
   

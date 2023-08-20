@@ -16,21 +16,17 @@ export const useCart =()=>{
  
  const accessToken = JSON.parse(localStorage.getItem("accessToken")!)
   useEffect(() => {
-    const getData = async () => {
-      try {
-        const { data } = await getCart()
-        dispatch({
+    getCart().then(({data})=>{
+       dispatch({
           type: "GET_CART",
           payload: data.cart
         })
-      } catch (error) {
-        console.log('Error fetching cart:', error);
-      }
-    }
-      if(accessToken){
-        getData()
-      }
-  }, [])
+    })  
+    
+  }, [accessToken])
+ 
+
+  
   // xóa 1 sp (.) giỏ hàng
   const handleRemove = (id: string) => {
     removeProductInCart(id);
@@ -93,5 +89,5 @@ export const useCart =()=>{
        toast.error('Please choose a size !')
     }
 }
-  return {cart, handleRemove,dispatch,handleAddCart}
+   return {cart, handleRemove,dispatch,handleAddCart}
 }

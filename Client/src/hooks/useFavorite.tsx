@@ -20,14 +20,14 @@ const useFavorite = () => {
             return
         }
         try {
-            updateFavorite(productId).then(({ data }) => {
+            updateFavorite(productId).then(() => {
                 getFavoriteUser().then(({ data }) => {
                     dispatch({
                         type: 'GET_FAVORITES_USER',
                         payload: data.favorites,
                     })
                 })
-                toast.success(data.message)
+                // toast.success(data.message)
             })
 
         } catch (error) {

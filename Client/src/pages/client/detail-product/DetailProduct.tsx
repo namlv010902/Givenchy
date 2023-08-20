@@ -10,6 +10,7 @@ import './DetailProduct.css';
 import Products from '../../../components/products/Products';
 import { useCart } from '../../../hooks/useCart';
 import useFavorite from '../../../hooks/useFavorite';
+import { IFavorite } from '../../../types/favorite';
 const DetailProduct = () => {
   const [show, setShow] = React.useState(false)
   const [product, setProduct] = useState<IProduct>()
@@ -22,7 +23,10 @@ const DetailProduct = () => {
   const [sizeId, setSizeId] = useState("")
   const { id } = useParams()
   const { handleAddCart } = useCart()
-  const { addOrRemoveFavorite } = useFavorite()
+  const { addOrRemoveFavorite,favorites } = useFavorite()
+  const productFvExist = favorites.find((item:IFavorite)=>item.productId._id === product?._id)
+  console.log(productFvExist);
+  
   useEffect(() => {
     if (id) {
       getProduct(id).then(({ data }) => {
@@ -130,7 +134,7 @@ const DetailProduct = () => {
                       <img src="https://res.cloudinary.com/dgqvtbr4n/image/upload/v1688562185/fb-removebg-preview_s627uf.png" alt="" />
                     </p>
                     <div className="heart">
-                      Like <i onClick={() => handleFavorite()} className="fa fa-heart-o" aria-hidden="true"></i>
+                      Like {productFvExist ? <i style={{color:"#f12"}} onClick={() => handleFavorite()} className="fa fa-heart" aria-hidden="true"></i> : <i onClick={() => handleFavorite()} className="fa fa-heart-o" aria-hidden="true"></i> }
                     </div>
                   </div>
                 </div>

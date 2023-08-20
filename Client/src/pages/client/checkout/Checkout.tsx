@@ -8,12 +8,14 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useCart } from '../../../hooks/useCart';
 const Checkout = () => {
-  const accessToken = JSON.parse(localStorage.getItem('accessToken')!)
+  const isFirstRender = useRef(true);
   const { cart, dispatch } = useCart()
   const [isLoading, setIsLoading] = useState(false)
-  const isFirstRender = useRef(true);
   const {user} = useStoreUser()
+  console.log(user);
+  
   const navigate = useNavigate()
+  const accessToken = JSON.parse(localStorage.getItem('accessToken')!)
   useEffect(() => {
     if (!accessToken) {
       navigate("/auth/login")
@@ -52,17 +54,17 @@ const Checkout = () => {
   return (
     <div className='checkout-main'>
       <div className="checkout" style={{ position: "relative" }}>
-        <h3>Checkout</h3> {isLoading ? <img height={100} style={{ position: "absolute", top: "100px", zIndex: "1", left: "5", right: "0" }} src="https://i.gifer.com/ZKZg.gif" /> : ""
+        <h3>Checkout</h3> {isLoading ? <img height={90} style={{ position: "absolute", top: "100px", zIndex: "1", left: "5", right: "0" }} src="https://i.gifer.com/origin/34/34338d26023e5515f6cc8969aa027bca_w200.gif" /> : ""
         } {user &&
           <form className="formCheckout" onSubmit={handleSubmit(onSubmit)}>
             <div className="form-group">
               <label htmlFor="">CustomerName</label> <br />
-              <input value={user.name} type="text" {...register("customerName", { required: true })} /> <br />
+              <input defaultValue={user?.name} type="text" {...register("customerName", { required: true })} /> <br />
               {errors.customerName?.type === 'required' && <span style={{ color: "#f12" }}>This is required</span>}
             </div>
             <div className="form-group">
               <label htmlFor="phone">Phone</label> <br />
-              <input defaultValue={user.phone} type="text" {...register("phone", { required: true, pattern: /^0[0-9]{9}$/ })} /> <br />
+              <input defaultValue={user?.phone} type="text" {...register("phone", { required: true, pattern: /^0[0-9]{9}$/ })} /> <br />
               {errors.phone?.type === 'required' && <span style={{ color: "#f12" }}>This is required</span>}
               {errors.phone?.type === 'pattern' && <span style={{ color: "#f12" }}>Place enter valid phone number</span>}
               <div className="form-group">
@@ -104,7 +106,7 @@ const Checkout = () => {
           )
         }
         )}
-        <h3 id='cartTotalPrice'>TotalPrice: ${cart.totalPrice}</h3>
+        <h3 id='cartTotalPrice'>Total payment: ${cart.totalPrice}</h3>
       </div>
     </div>
   )

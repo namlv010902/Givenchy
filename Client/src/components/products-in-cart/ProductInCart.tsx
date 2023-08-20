@@ -10,7 +10,7 @@ const ProductInCart = () => {
     <div className='show-cart'>
       {cart?.products?.length > 0 ? <div>
         {cart?.products?.map((item: any) => (
-          <div key={item._id}>
+          <Link to={`product/${item.productId._id}`} key={item._id}>
             <div className="productInCart" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginRight: "10px" }}>
               <div className="item-cart">
                 <div className="product-in-cart-image">
@@ -25,7 +25,7 @@ const ProductInCart = () => {
               <i style={{ cursor: "pointer" }} onClick={() => handleRemove(item._id)}
                 className="fa-regular fa-circle-xmark"></i>
             </div>
-          </div>
+          </Link>
         ))}
         <strong id='priceTotal'>TotalPrice: ${cart?.totalPrice}</strong> <br />
         <Link onClick={()=>scrollToTop()} to="/cart"> <button className="btn-show-cart" >View cart</button></Link>

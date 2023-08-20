@@ -17,6 +17,7 @@ const Search = () => {
             {products?.map(item => {
                 return (
                     <div key={item._id} >
+                        <div className='productInCart'>
                         <Link onClick={() => scrollToTop()} className="item-cart" to={`/product/${item._id}`}>
                             <div className="image-cart">
                                 <img src={item.image} alt="" />
@@ -26,6 +27,7 @@ const Search = () => {
                                 <strong id='price'>${item.sizes[0].price} </strong>
                             </div>
                         </Link>
+                    </div>
                     </div>
                 )
             })}

@@ -47,7 +47,7 @@ header {
     padding: 0 10px;
 }
 .productInCart:hover {
-    background-color: #ccc;
+    background-color: #cccccc62;
     border-radius: 5px;
 }
 .productInCart i:hover{

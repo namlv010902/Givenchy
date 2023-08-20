@@ -2,15 +2,14 @@
 import { Pagination, Select, Slider } from 'antd';
 import { IProduct } from '../../../types/products';
 import './products.css';
-import { useEffect, useState } from "react"
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Products from '../../../components/products/Products';
 import { filterPrice, getCategoryProducts, getProductsByBrand, getProductsByGender, getProductsBySize, sortProduct } from '../../../service/products.service';
-import { getBrands } from '../../../service/brand.service';
 import { useProducts } from '../../../hooks/useProducts';
 import { useCategories } from '../../../hooks/useCategories';
 import { useSizes } from '../../../hooks/useSizes';
+import { useBrand } from '../../../hooks/useBrand';
 
 const ProductsPage = () => {
   const {products, totalPage, handlePageChange,dispatch:dispatchProducts} = useProducts()
@@ -60,11 +59,7 @@ const ProductsPage = () => {
     })
   };
   const gender = ['Man', 'Woman', 'Unisex']
-  const [brand, setBrand] = useState<any>()
-  useEffect(() => {
-    getBrands().then(({ data }) => setBrand(data.brand)
-    )
-  }, [])
+  const {brand} = useBrand()
   const handleProductByBrand = (id: string) => {
     getProductsByBrand(id).then(({ data }) => {
       dispatchProducts({

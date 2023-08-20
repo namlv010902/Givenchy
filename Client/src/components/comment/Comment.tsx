@@ -3,7 +3,6 @@ import { Button, Form, Input, message } from 'antd';
 import './comment.css'
 import { createComment, getCommentProduct } from '../../service/comment.service';
 import { useEffect } from "react"
-
 import { useStoreComment } from '../../store/hooks';
 interface IProps {
   data: any,
@@ -33,8 +32,7 @@ const ShowComment = (props: IProps) => {
       });
       return
     }
-    console.log(props.data);
-    
+    // console.log(props.data);
     createComment(props.data).then(() => {
       getCommentProduct(props.idProduct).then(({ data }) => {
         dispatch({
@@ -42,19 +40,15 @@ const ShowComment = (props: IProps) => {
           payload: data.comment
         })
       })
-
     }
     )
     .catch((err)=>alert(err))
   }
-
   return (
     <div>
       <div className="show-comment"> {contextHolder}
         {comments?.map((item: any) => {
-          var checkTime = new Date(item.createdAt);
-          var outTime = checkTime.toLocaleString();
-
+          var outTime = new Date(item.createdAt).toLocaleDateString();
           return (
             <div className='item-showComment' key={item._id}>
               <img src={item?.userId?.avatar} alt="Avatar" />

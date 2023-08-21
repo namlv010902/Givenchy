@@ -92,7 +92,7 @@ const Cart = () => {
             <div id="checkout">
               <h3>TotalPrice: ${cart.totalPrice}</h3>
               <Link to="/checkout">
-                <button>Checkout</button>
+                <button onClick={()=>scrollToTop()}>Checkout</button>
               </Link>
             </div>
           </div>

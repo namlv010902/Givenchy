@@ -45,7 +45,10 @@ const Products = (props: IProps) => {
       setPrice(productExist?.price)
     }
   }
-  return (
+  
+  
+  return ( 
+
     <div className="colum" key={props.product._id}><ToastContainer></ToastContainer>
       <div className="image">
         <img id="productImage" src={props.product.image} alt="" />
@@ -85,6 +88,7 @@ const Products = (props: IProps) => {
         </div>
         <p>{props.product.description}</p>
       </Modal>
+   
     </div>
   )
 }

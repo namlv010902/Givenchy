@@ -3,6 +3,7 @@ import { useStoreProducts } from "../store/hooks"
 import { useEffect, useState } from "react"
 export const useProducts=()=>{
     const { products, dispatch } = useStoreProducts()
+   
     const [totalPage, setToTalPage] = useState(0)
     useEffect(() => {
       getAll().then(({ data }) => {

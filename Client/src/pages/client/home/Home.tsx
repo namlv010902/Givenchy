@@ -5,13 +5,18 @@ import { useEffect, useState } from "react"
 import { getProductBest, getProductNew } from '../../../service/products.service'
 import { IProduct } from '../../../types/products'
 import Products from '../../../components/products/Products'
+import { Loading } from '../../../components/loading/Loading'
 
 const Home = () => {
   const [products, setProducts] = useState<IProduct[]>()
   const [product, setProduct] = useState<IProduct[]>()
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
-    getProductNew().then(({ data }) => setProducts(data.product.docs)
-    )
+    getProductNew().then(({ data }) => {
+      setProducts(data.product.docs)
+      setLoading(false)
+    }
+    ).catch(() => setLoading(true))
   }, [])
   useEffect(() => {
     getProductBest().then(({ data }) => setProduct(data.product.docs)
@@ -41,12 +46,12 @@ const Home = () => {
         <div className="title" >
           <div className="title-child"><h1>BEST SELLER</h1></div>
         </div>
-        <div className="products">
+        {!loading ? <div className="products">
           {product?.map((item: IProduct) => (
-            <Products product={item} ></Products>
+            <Products product={item}  ></Products>
           ))}
 
-        </div>
+        </div> : <Loading></Loading>}
         <div className="banner-child">
           <div className="trendy-text">
             <h3>Trendy Perfumes</h3>
@@ -61,11 +66,11 @@ const Home = () => {
           <div className="title-child"><h1>TRENDING</h1></div>
 
         </div>
-        <div className="products">
+      {!loading ?<div className="products">
           {products?.map((item: IProduct) => (
-            <Products product={item} ></Products>
+            <Products product={item}  ></Products>
           ))}
-        </div>
+        </div> : <Loading></Loading>}
         <div className='watch&shop'>
           <div style={{ display: "flex" }} >
             <img src="https://permia-store-demo.myshopify.com/cdn/shop/files/instagram1.jpg?v=17232624854781795367" alt="" />

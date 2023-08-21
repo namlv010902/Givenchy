@@ -26,14 +26,13 @@ export const checkPermissionAndAuth=async(req, res, next)=>{
             const user = await User.findById(payLoad.id);
             console.log(user);
             // kiểm tra xem user có đủ quyền để thực hiện hành động đó không
-            if (user.role != "admin") {
+            if (user.role !== "admin") {
                 return res.status(403).json({
                     message: "Bạn không có quyền để thực hiện hành động này",
                 });
             }
             // lưu thông tin user vào request để sử dụng trong các middleware khác
             req.user = user;
-
             next();
         });  
         

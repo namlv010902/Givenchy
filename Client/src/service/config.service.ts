@@ -2,7 +2,7 @@ import axios from "axios"
 import { animateScroll as scroll } from "react-scroll";
 
 export const instance = axios.create({
-  baseURL: "https://server-9izc.onrender.com/api/"
+  baseURL: "http://localhost:8080/api/"
 })
 
 export const getAuthorizationHeaders = () => {

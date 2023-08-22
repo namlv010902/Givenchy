@@ -4,6 +4,7 @@ import './comment.css'
 import { createComment, getCommentProduct } from '../../service/comment.service';
 import { useEffect } from "react"
 import { useStoreComment } from '../../store/hooks';
+import { IComment } from '../../types/comment';
 interface IProps {
   data: any,
   idProduct: string,
@@ -47,7 +48,7 @@ const ShowComment = (props: IProps) => {
   return (
     <div>
       <div className="show-comment"> {contextHolder}
-        {comments?.map((item: any) => {
+        {comments?.map((item: IComment) => {
           var outTime = new Date(item.createdAt).toLocaleDateString();
           return (
             <div className='item-showComment' key={item._id}>

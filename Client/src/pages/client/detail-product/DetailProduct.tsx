@@ -24,7 +24,7 @@ const DetailProduct = () => {
   const { id } = useParams()
   const { handleAddCart } = useCart()
   const { addOrRemoveFavorite,favorites } = useFavorite()
-  const productFvExist = favorites.find((item: any) => item.productId._id === product?._id);
+  const productFvExist = favorites.find((item: IFavorite) => item.productId._id === product?._id);
   useEffect(() => {
     if (id) {
       getProduct(id).then(({ data }) => {
@@ -32,7 +32,7 @@ const DetailProduct = () => {
         setIsLoading(false)
       }
       )
-        .catch(() => {
+      .catch(() => {
           setIsLoading(false)
         })
     }

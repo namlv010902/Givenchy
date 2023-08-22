@@ -15,7 +15,7 @@ export const createComment =async(req, res)=>{
 }
 export const getCommentProduct =async(req, res)=>{
     try {
-       const comment = await Comment.find({productId: req.params.idProduct}).populate("userId")
+       const comment = await Comment.find({productId: req.params.idProduct}).populate("userId").populate("productId")
        return res.status(200).json({
            message:"Get comment successfully",
            comment
@@ -25,5 +25,29 @@ export const getCommentProduct =async(req, res)=>{
            message: error.message, 
          });
     }
-   
+   }
+   export const getComments =async(req, res)=>{
+    try {
+       const comment = await Comment.find().populate("userId").populate("productId")
+       return res.status(200).json({
+           message:"Get comments successfully",
+           comment
+       })
+    } catch (error) {
+       return res.status(400).json({
+           message: error.message, 
+         });
+    }
+   }
+   export const removeComment =async(req, res)=>{
+    try {
+       const comment = await Comment.findByIdAndDelete(req.params.id).populate("userId").populate("productId")
+       return res.status(200).json({
+           message:"Delete comment successfully",
+       })
+    } catch (error) {
+       return res.status(400).json({
+           message: error.message, 
+         });
+    }
    }

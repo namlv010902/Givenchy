@@ -7,11 +7,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import type { UploadFile } from 'antd/es/upload/interface';
-import axios from 'axios';
 import { useStoreUser } from '../../../store/hooks';
 import {  updateProfile } from '../../../service/auth.service';
 import { Link, useNavigate } from 'react-router-dom';
 import { scrollToTop } from '../../../service/config.service';
+import { upLoadImg } from '../../../service/upload.service';
 
 const Profile = () => {
   const [profile, setProfile] = useState(false)
@@ -58,11 +58,7 @@ const Profile = () => {
       formData.append('image', file.originFileObj);
    }
     console.log(formData);
-    axios.post('http://localhost:8080/api/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+    upLoadImg(formData)
       .then((response) => {
         setLoading(false)
         // console.log(response.data.data[0].url);

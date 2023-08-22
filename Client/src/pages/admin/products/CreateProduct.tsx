@@ -2,7 +2,7 @@
 import { useForm, useFieldArray } from 'react-hook-form';
 import "./products.css"
 import { useStoreBrand, useStoreCategory, useStoreSize } from '../../../store/hooks';
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import { getCategories } from '../../../service/categories.service';
 import { ICate } from '../../../types/categories';
 import { getSizes } from '../../../service/size.service';
@@ -11,6 +11,7 @@ import { createProduct } from '../../../service/products.service';
 import { getBrands } from '../../../service/brand.service';
 import { IBrand } from '../../../types/brand';
 import { useNavigate } from 'react-router-dom';
+import { upLoadImg } from '../../../service/upload.service';
 interface ProductFormData {
   name: string;
   image: string;
@@ -39,6 +40,7 @@ const CreateProduct = () => {
   const { categories, dispatch } = useStoreCategory()
   const { sizes, dispatch: dispatchSize } = useStoreSize()
   const { brands, dispatch: dispatchBrand } = useStoreBrand()
+  const [imgUrl, setImgUrl] = useState('');
 
   useEffect(() => {
     getCategories().then(({ data }) => {
@@ -60,12 +62,20 @@ const CreateProduct = () => {
       })
     })
   }, [])
-
-  console.log(brands);
-
   const gender = ['Man', 'Woman', 'Unisex']
+  const handleUpload = (value: React.ChangeEvent<HTMLInputElement>) => {
+    if (value.target.files) {
+      const file = value.target.files[0]
+      const formData = new FormData();
+      formData.append('image', file);
+      upLoadImg(formData).then((res) => {
+      setImgUrl(res.data.data[0].url);
+      })
+    }
+  }
   const onSubmit = (data: ProductFormData) => {
-    console.log(data);
+    data.image = imgUrl
+  //  console.log(data);
     createProduct(data).then(() => {
       alert(" Product created successfully")
       navigate("/admin/products")
@@ -73,7 +83,7 @@ const CreateProduct = () => {
       .catch(({ response }) => {
         alert(response.data.message)
       })
-    // Gửi dữ liệu đi hoặc xử lý dữ liệu tại đây
+    
   };
 
 
@@ -93,9 +103,11 @@ const CreateProduct = () => {
         <div>
           <label htmlFor="productName">Image:</label> <br />
           <input
-            type="text"
+            type="file"
             id="input-groupAdd"
             {...register('image', { required: true })}
+            onChange={(e) => handleUpload(e)}
+           
           />
           <p id='err'>{errors.image && <span>This is required</span>}</p>
         </div>
